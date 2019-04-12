@@ -38,7 +38,8 @@ module.exports = function (ctx) {
         'QList',
         'QItem',
         'QItemSection',
-        'QItemLabel'
+        'QItemLabel',
+        'QFooter'
       ],
 
       directives: [
@@ -64,6 +65,7 @@ module.exports = function (ctx) {
       // analyze: true,
       // extractCSS: false,
       extendWebpack (cfg) {
+        cfg.devtool = 'source-map'
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,

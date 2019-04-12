@@ -78,6 +78,15 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer class="bg-grey-8 text-white">
+      <div class="row">
+        <div class="col-11">Running on Quasar v {{ $q.version }}</div>
+          <!-- уведомление об ошибках -->
+          <div class="col-auto">
+          </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
