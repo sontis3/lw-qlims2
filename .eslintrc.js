@@ -31,6 +31,8 @@ module.exports = {
 
   // add your custom rules here
   rules: {
+    'max-len': ["error", { "code": 130 }],
+    
     'no-param-reassign': 'off',
 
     'import/first': 'off',
