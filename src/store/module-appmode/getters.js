@@ -1,22 +1,22 @@
-// import { filter } from 'quasar';
 
-// получить список акций для текущего режима
-export const currentActionsList = state => state.allActions.find((element, index, array) => {
-  if (element.modeId === state.currentMode.id) {
-    return true;
-  }
-  return false;
-}).actions;
-// filter(state.currentMode.id, { field: 'modeId', list: state.allActions })[0].actions;
+// // получить список акций для текущего режима
+// export const currentActionsList = state => state.allActions.find((element, index, array) => {
+//   if (element.modeId === state.currentMode.id) {
+//     return true;
+//   }
+//   return false;
+// }).actions;
 
-// получить текущую акцию в текущем режиме
-export const currentAction = state => state.allActions.find((element, index, array) => {
-  if (element.modeId === state.currentMode.id) {
-    return true;
-  }
-  return false;
-}).currentAction;
-// filter(state.currentMode.id, { field: 'modeId', list: state.allActions })[0].currentAction;
+// // получить текущую акцию в текущем режиме
+// export const currentAction = state => state.allActions.find((element, index, array) => {
+//   if (element.modeId === state.currentMode.id) {
+//     return true;
+//   }
+//   return false;
+// }).currentAction;
+
+// получить данные для построения дерева акций
+export const getActionsTreeData = state => state.treeActionsTemplate;
 
 // сформировать сообщение об ошибке от сервера
 /* eslint no-unused-vars: ["error", { "args": "none" }] */
@@ -43,4 +43,4 @@ export const getErrorMessage = state => (httpMethod, err) => {
   return errStatus;
 };
 
-export { currentActionsList as default };
+export { getActionsTreeData as default };

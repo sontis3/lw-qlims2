@@ -1,21 +1,24 @@
+/* eslint-disable func-names */
+/* eslint-disable quote-props */
 // Configuration for your app
 
+// eslint-disable-next-line no-unused-vars
 module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
       'i18n',
-      'axios'
+      'axios',
     ],
 
     css: [
-      'app.styl'
+      'app.styl',
     ],
 
     extras: [
       'roboto-font',
-      'material-icons' // optional, you are not bound to it
+      'material-icons', // optional, you are not bound to it
       // 'ionicons-v4',
       // 'mdi-v3',
       // 'fontawesome-v5',
@@ -42,17 +45,19 @@ module.exports = function (ctx) {
         'QFooter',
         'QTooltip',
         'QMenu',
-        'QExpansionItem'
+        'QExpansionItem',
+        'QBtnGroup',
+        'QTree',
       ],
 
       directives: [
-        'Ripple'
+        'Ripple',
       ],
 
       // Quasar plugins
       plugins: [
-        'Notify'
-      ]
+        'Notify',
+      ],
 
       // iconSet: 'ionicons-v4'
       // lang: 'de' // Quasar language
@@ -67,28 +72,28 @@ module.exports = function (ctx) {
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
-      extendWebpack (cfg) {
-        cfg.devtool = 'source-map'
+      extendWebpack(cfg) {
+        cfg.devtool = 'source-map';
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /node_modules/
-        })
-      }
+          exclude: /node_modules/,
+        });
+      },
     },
 
     devServer: {
       // https: true,
       // port: 8080,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
     },
 
     // animations: 'all' --- includes all animations
     animations: [],
 
     ssr: {
-      pwa: false
+      pwa: false,
     },
 
     pwa: {
@@ -106,30 +111,30 @@ module.exports = function (ctx) {
           {
             'src': 'statics/icons/icon-128x128.png',
             'sizes': '128x128',
-            'type': 'image/png'
+            'type': 'image/png',
           },
           {
             'src': 'statics/icons/icon-192x192.png',
             'sizes': '192x192',
-            'type': 'image/png'
+            'type': 'image/png',
           },
           {
             'src': 'statics/icons/icon-256x256.png',
             'sizes': '256x256',
-            'type': 'image/png'
+            'type': 'image/png',
           },
           {
             'src': 'statics/icons/icon-384x384.png',
             'sizes': '384x384',
-            'type': 'image/png'
+            'type': 'image/png',
           },
           {
             'src': 'statics/icons/icon-512x512.png',
             'sizes': '512x512',
-            'type': 'image/png'
-          }
-        ]
-      }
+            'type': 'image/png',
+          },
+        ],
+      },
     },
 
     cordova: {
@@ -139,7 +144,8 @@ module.exports = function (ctx) {
     electron: {
       // bundler: 'builder', // or 'packager'
 
-      extendWebpack (cfg) {
+      // eslint-disable-next-line no-unused-vars
+      extendWebpack(cfg) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       },
@@ -161,7 +167,7 @@ module.exports = function (ctx) {
         // https://www.electron.build/configuration/configuration
 
         // appId: 'quasar-app'
-      }
-    }
-  }
-}
+      },
+    },
+  };
+};

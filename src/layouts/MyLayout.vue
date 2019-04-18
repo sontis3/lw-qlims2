@@ -1,66 +1,36 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh LPr fFf">
     <q-header elevated class="glossy">
-      <q-toolbar>
+      <q-toolbar class="bg-secondary">
         <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu">
           <q-icon name="menu"/>
         </q-btn>
 
-        <q-toolbar-title>Quasar App</q-toolbar-title>
+        <q-toolbar-title>My App</q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <!-- <q-btn-group>
+          <q-btn
+            @click="onChangeMode({id: 'Directory', name: 'Системные справочники'})"
+            label="Справочники"
+            :class="{checked: currentMode.id === 'Directory'}"
+          ></q-btn>
+          <q-btn
+            @click="onChangeMode({id: 'Catalogs', name: 'Реестры'})"
+            label="Реестры"
+            :class="{checked: currentMode.id == 'MasterSchedules'}"
+          ></q-btn>
+        </q-btn-group> -->
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" bordered content-class="bg-grey-2">
-      <q-list>
-        <q-item-label header>Essential Links</q-item-label>
-        <q-item clickable tag="a" target="_blank" href="http://v1.quasar-framework.org">
-          <q-item-section avatar>
-            <q-icon name="school"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Docs</q-item-label>
-            <q-item-label caption>v1.quasar-framework.org</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://github.com/quasarframework/">
-          <q-item-section avatar>
-            <q-icon name="code"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Github</q-item-label>
-            <q-item-label caption>github.com/quasarframework</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="http://chat.quasar-framework.org">
-          <q-item-section avatar>
-            <q-icon name="chat"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Discord Chat Channel</q-item-label>
-            <q-item-label caption>chat.quasar-framework.org</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://forum.quasar-framework.org">
-          <q-item-section avatar>
-            <q-icon name="record_voice_over"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Forum</q-item-label>
-            <q-item-label caption>forum.quasar-framework.org</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable tag="a" target="_blank" href="https://twitter.com/quasarframework">
-          <q-item-section avatar>
-            <q-icon name="rss_feed"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Twitter</q-item-label>
-            <q-item-label caption>@quasarframework</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+    <q-drawer v-model="leftDrawerOpen" content-class="bg-grey-4">
+      <q-tree
+        :nodes="actionsTreeData"
+        node-key="id"
+        :selected.sync="selectedActionId"
+        selected-color="secondary"
+        @update:selected="actionNodeSelected"
+      ></q-tree>
     </q-drawer>
 
     <q-page-container>
@@ -109,13 +79,14 @@
 
 <script>
 import { openURL } from 'quasar';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'MyLayout',
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
+      selectedActionId: '',
     };
   },
 
@@ -123,10 +94,12 @@ export default {
     ...mapState({
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
+      selectedAction: state => state.appMode.selectedAction,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
       currentAction: 'appMode/currentAction',
+      actionsTreeData: 'appMode/getActionsTreeData',
     }),
     // объект для настройки стиля елемента уведомления об ошибках
     styleObject() {
@@ -135,7 +108,7 @@ export default {
         animation: this.errorNotifications.length ? 'blinker 2s linear infinite' : '',
       };
     },
-    // объект для настройки стиля сщщбщений об ошибках
+    // объект для настройки стиля сообщений об ошибках
     styleObject2() {
       return {
         opacity: 0.6,
@@ -146,7 +119,26 @@ export default {
 
   methods: {
     openURL,
+
+    ...mapMutations({
+      changeSelectedAction: 'appMode/changeSelectedAction',
+    }),
+
+    // по нажатию кнопки удаления оповещения
+    onDeleteNotification(index) {
+      // this.errorNotifications.splice(index, 1);
+      this.$delete(this.errorNotifications, index);
+    },
+    // выбрана акция в дереве
+    actionNodeSelected(target) {
+      this.changeSelectedAction(target);
+      console.log(target);
+    },
   },
+
+  // mounted() {
+  //   this.$router.push({ name: this.selectedAction });
+  // },
 };
 </script>
 

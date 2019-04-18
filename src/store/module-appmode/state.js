@@ -1,27 +1,25 @@
 export default {
-  // Текущий выбранный режим из меню тулбара
-  currentMode: { id: 'Directory', name: 'Системные справочники' },
+  // текущая выбранная акция
+  selectedAction: 'Countries',
 
-  // Варианты панели команд
-  allActions: [
+  // данные для шаблона дерева акций
+  treeActionsTemplate: [
     {
-      modeId: 'Directory',
-      currentAction: 'Customers',
-      actions: [
-        { id: 'Customers', name: 'Заказчики' },
-        { id: 'TestObjects', name: 'Тестируемые объекты' },
-        { id: 'DeliveryMethods', name: 'Способы доставки' },
-        { id: 'Couriers', name: 'Курьеры' },
-        { id: 'Samples', name: 'Образцы' },
+      id: 'Directory',
+      label: 'Справочники',
+      selectable: false,
+      children: [
+        { id: 'Customers', label: 'Заказчики' },
+        { id: 'Countries', label: 'Страны' },
       ],
     },
     {
-      modeId: 'Catalogs',
-      currentAction: 'MasterSchedules',
-      actions: [
-        { id: 'MasterSchedules', name: 'План-график исследований' },
-        { id: 'Studies', name: 'Реестр исследований' },
-        { id: 'StandardSamples', name: 'Реестр стандартных образцов' },
+      id: 'Catalogs',
+      label: 'Реестры',
+      selectable: false,
+      children: [
+        { id: 'MasterSchedules', label: 'План-график исследований', lazy: true },
+        { id: 'StandardSamples', label: 'Реестр стандартных образцов', lazy: true },
       ],
     },
   ],
