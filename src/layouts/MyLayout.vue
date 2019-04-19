@@ -5,21 +5,7 @@
         <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu">
           <q-icon name="menu"/>
         </q-btn>
-
         <q-toolbar-title>My App</q-toolbar-title>
-
-        <!-- <q-btn-group>
-          <q-btn
-            @click="onChangeMode({id: 'Directory', name: 'Системные справочники'})"
-            label="Справочники"
-            :class="{checked: currentMode.id === 'Directory'}"
-          ></q-btn>
-          <q-btn
-            @click="onChangeMode({id: 'Catalogs', name: 'Реестры'})"
-            label="Реестры"
-            :class="{checked: currentMode.id == 'MasterSchedules'}"
-          ></q-btn>
-        </q-btn-group> -->
       </q-toolbar>
     </q-header>
 
@@ -136,6 +122,7 @@ export default {
     // выбрана акция в дереве
     actionNodeSelected(target) {
       this.changeSelectedAction(target);
+      this.$router.push({ name: this.selectedActionId });
       console.log(target);
     },
   },

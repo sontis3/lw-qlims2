@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import appMode from './module-appmode';
-// import ds from './module-ds';
+import ds from './module-ds';
 
 Vue.use(Vuex);
 
@@ -15,7 +15,7 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       appMode,
-      // ds
+      ds,
     },
 
     // enable strict mode (adds overhead!)
