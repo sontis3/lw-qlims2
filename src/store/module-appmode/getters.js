@@ -1,20 +1,3 @@
-
-// // получить список акций для текущего режима
-// export const currentActionsList = state => state.allActions.find((element, index, array) => {
-//   if (element.modeId === state.currentMode.id) {
-//     return true;
-//   }
-//   return false;
-// }).actions;
-
-// // получить текущую акцию в текущем режиме
-// export const currentAction = state => state.allActions.find((element, index, array) => {
-//   if (element.modeId === state.currentMode.id) {
-//     return true;
-//   }
-//   return false;
-// }).currentAction;
-
 // получить данные для построения дерева акций
 export const getActionsTreeData = state => state.treeActionsTemplate;
 

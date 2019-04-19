@@ -27,9 +27,11 @@
       <q-tree
         :nodes="actionsTreeData"
         node-key="id"
-        :selected.sync="selectedActionId"
+        :selected.sync="selectedNode"
+        :expanded.sync="expandedNodes"
         selected-color="secondary"
         @update:selected="actionNodeSelected"
+        ref="actionsTree"
       ></q-tree>
     </q-drawer>
 
@@ -86,7 +88,8 @@ export default {
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
-      selectedActionId: '',
+      selectedNode: '', // выбранный узел дерева акций
+      expandedNodes: ['Directory'],
     };
   },
 
@@ -94,13 +97,14 @@ export default {
     ...mapState({
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
-      selectedAction: state => state.appMode.selectedAction,
+      selectedActionId: state => state.appMode.selectedActionId,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
       currentAction: 'appMode/currentAction',
       actionsTreeData: 'appMode/getActionsTreeData',
     }),
+
     // объект для настройки стиля елемента уведомления об ошибках
     styleObject() {
       return {
@@ -136,9 +140,11 @@ export default {
     },
   },
 
-  // mounted() {
-  //   this.$router.push({ name: this.selectedAction });
-  // },
+  mounted() {
+    this.selectedNode = this.selectedActionId;
+    // this.$refs.actionsTree.setExpanded(this.selectedNode, 'true');
+    this.$router.push({ name: this.selectedActionId });
+  },
 };
 </script>
 

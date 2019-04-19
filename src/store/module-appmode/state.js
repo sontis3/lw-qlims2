@@ -1,6 +1,6 @@
 export default {
   // текущая выбранная акция
-  selectedAction: 'Countries',
+  selectedActionId: 'Customers',
 
   // данные для шаблона дерева акций
   treeActionsTemplate: [

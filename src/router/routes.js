@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       { path: '', name: 'Index', component: () => import('pages/Index.vue') },
-      // { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
+      { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
       // { path: 'directory/test-objects', name: 'TestObjects', component: () => import('components/directory/test-objects') },
       // { path: 'directory/delivery-methods', name: 'DeliveryMethods', component: () => import('components/directory/delivery-methods') },
       // { path: 'directory/couriers', name: 'Couriers', redirect: '' },
