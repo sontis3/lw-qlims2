@@ -48,6 +48,10 @@ module.exports = function (ctx) {
         'QExpansionItem',
         'QBtnGroup',
         'QTree',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
       ],
 
       directives: [

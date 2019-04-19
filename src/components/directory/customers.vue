@@ -1,5 +1,8 @@
 <template>
-  <div>My component</div>
+  <div>
+    <q-table title="Заказчики">
+    </q-table>
+  </div>
 </template>
 
 <script>
