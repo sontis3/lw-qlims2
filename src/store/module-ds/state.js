@@ -8,16 +8,19 @@ export default {
   dirPartUrl: 'dir',
   catalogsPartUrl: 'catalogs',
   customersPartUrl: 'customers',
+  countriesPartUrl: 'countries',
+
   testObjectsPartUrl: 'test-objects',
   deliveryMethodsPartUrl: 'delivery-methods',
   studiesPartUrl: 'studies',
   contentPartUrl: 'content',
   infoPartUrl: 'info',
 
-  /* eslint no-multi-spaces: ["error", { ignoreEOLComments: true }] */
   // источники данных
   dsCustomers: [],        // Заказчики
   dsShortCustomers: [],   // Заказчики для QSelect
+  dsCountries: [],        // Страны
+
   dsTestObjects: [],      // Тестируемые объекты
   dsShortTestObjects: [], // Тестируемые объекты для QSelect
   dsDeliveryMethods: [],  // Методы доставки

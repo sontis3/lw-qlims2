@@ -7,6 +7,11 @@ export const setDsShortCustomers = (state, newDs) => {
   state.dsShortCustomers = newDs;
 };
 
+// установить новый источник данных Страны
+export const setDsCountries = (state, newDs) => {
+  state.dsCountries = newDs;
+};
+
 // установить новый источник данных Тестируемые объекты
 export const setDsTestObjects = (state, newDs) => {
   state.dsTestObjects = newDs;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-table
-      title="Заказчики"
+      title="Страны"
       :columns="columns"
       :visibleColumns="visibleColumns"
       :data="ds"
@@ -49,13 +49,13 @@
     <q-dialog v-model="showDialog" persistent @show="onShow">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Добавление нового заказчика</div>
+          <div class="text-h6">Добавление новой страны</div>
         </q-card-section>
         <q-card-section>
           <div slot="body">
             <div class="row q-mb-md">
               <q-input
-                v-model="addFormFields.name"
+                v-model="addFormFields.name_ru"
                 type="text"
                 float-label="Наименование заказчика"
                 ref="ff"
@@ -90,13 +90,22 @@ export default {
     return {
       columns: [
         {
-          name: 'desc',           // уникальный ид столбца
-          required: true,         // обязательный
-          label: 'Наименование',  // заголовок столбца
-          align: 'left',          // выравнивание
-          field: 'name',          // поле источник значений
-          sortable: true,         // сортируемый столбец
-          classes: 'popup-edit',  // пользовательские классы
+          name: 'desc_ru',               // уникальный ид столбца
+          required: true,             // обязательный
+          label: 'Наименование рус',  // заголовок столбца
+          align: 'left',              // выравнивание
+          field: 'name_ru',           // поле источник значений
+          sortable: true,             // сортируемый столбец
+          classes: 'popup-edit',      // пользовательские классы
+        },
+        {
+          name: 'desc_en',
+          required: true,
+          label: 'Наименование англ',
+          align: 'left',
+          field: 'name_en',
+          sortable: true,
+          classes: 'popup-edit',
         },
         {
           name: 'enabled',
@@ -108,20 +117,6 @@ export default {
           classes: 'as-checkbox',
         },
         {
-          name: 'createdAt',
-          label: 'Дата создания',
-          align: 'center',
-          field: 'createdAt',
-          sortable: true,
-        },
-        {
-          name: 'updatedAt',
-          label: 'Дата изменения',
-          align: 'center',
-          field: 'updatedAt',
-          sortable: true,
-        },
-        {
           name: 'rowActions',
           label: 'Действия',
           align: 'right',
@@ -129,10 +124,11 @@ export default {
           required: true,
         },
       ],
-      visibleColumns: ['desc', 'enabled', 'createdAt', 'row-actions'],
+      visibleColumns: ['desc_ru', 'desc_en', 'enabled', 'row-actions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
-        name: null,
+        name_ru: null,
+        name_en: null,
         enabled: true,
       },
       showDialog: false,  // показать/скрыть диалог добавления
@@ -148,10 +144,10 @@ export default {
       getErrorMessage: 'appMode/getErrorMessage',
     }),
     ...mapActions({
-      getDocuments: 'ds/getCustomers',
-      addDocument: 'ds/addCustomer',
-      deleteDocument: 'ds/deleteCustomer',
-      updateDocument: 'ds/updateCustomer',
+      getDocuments: 'ds/getCountries',
+      addDocument: 'ds/addCountry',
+      deleteDocument: 'ds/deleteCountry',
+      updateDocument: 'ds/updateCountry',
     }),
   },
 
