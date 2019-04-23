@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LPr fFf">
+  <q-layout view="hHh Lpr fFf">
     <q-header elevated class="glossy">
       <q-toolbar class="bg-secondary">
         <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu">
@@ -9,7 +9,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" content-class="bg-grey-4">
+    <q-drawer v-model="leftDrawerOpen" content-class="bg-grey-4" :width="200">
       <q-tree
         :nodes="actionsTreeData"
         node-key="id"

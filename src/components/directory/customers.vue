@@ -1,6 +1,76 @@
 <template>
   <div>
-    <q-table title="Заказчики" :columns="columns" :data="ds"></q-table>
+    <q-table
+      title="Заказчики"
+      :columns="columns"
+      :visibleColumns="visibleColumns"
+      :data="ds"
+      :filter="filter"
+      :loading="isLoading"
+      dense
+      separator="cell"
+    >
+      <template v-slot:top-right="props">
+        <!-- кнопка добавления документа -->
+        <q-btn flat round dense icon="add_box" @click="AddDocument"/>
+        <!-- поиск -->
+        <q-input v-model="filter" filled dense type="search" debounce="300" color="secondary">
+          <template v-slot:append>
+            <q-icon name="search"/>
+          </template>
+        </q-input>
+        <q-space/>
+        <!-- выбор показуваемых столбцов -->
+        <q-select
+          v-model="visibleColumns"
+          multiple
+          borderless
+          dense
+          options-dense
+          :display-value="$q.lang.table.columns"
+          emit-value
+          map-options
+          :options="columns"
+          option-value="name"
+          style="min-width: 150px"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="props.toggleFullscreen"
+          class="q-ml-md"
+        />
+      </template>
+    </q-table>
+
+    <!-- Диалог добавления документа -->
+    <q-dialog v-model="showDialog" persistent @show="onShow">
+      <q-card>
+        <q-card-section>
+          <!-- <span slot="title">Добавление нового заказчика</span>
+          <div slot="body">
+            <div class="row q-mb-md">
+              <q-input
+                v-model="addFormFields.name"
+                type="text"
+                float-label="Наименование заказчика"
+                ref="ff"
+              />
+            </div>
+            <div class="row q-mb-md">
+              <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
+            </div>
+          </div>-->
+        </q-card-section>
+
+        <q-card-actions>
+          <q-btn flat label="Cancel" v-close-popup/>
+          <q-btn flat label="Add" @click="onAdd" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -9,7 +79,7 @@ import {
   mapState,
   mapGetters,
   // mapMutations,
-  // mapActions,
+  mapActions,
 } from 'vuex';
 
 export default {
@@ -18,13 +88,13 @@ export default {
     return {
       columns: [
         {
-          name: 'desc',
-          required: true,
-          label: 'Наименование',
-          align: 'left',
-          field: 'name',
-          sortable: true,
-          classes: 'popup-edit',
+          name: 'desc',           // уникальный ид столбца
+          required: true,         // обязательный
+          label: 'Наименование',  // заголовок столбца
+          align: 'left',          // выравнивание
+          field: 'name',          // поле источник значений
+          sortable: true,         // сортируемый столбец
+          classes: 'popup-edit',  // пользовательские классы
         },
         {
           name: 'enabled',
@@ -36,17 +106,17 @@ export default {
           classes: 'as-checkbox',
         },
         {
-          name: 'dateCreated',
+          name: 'createdAt',
           label: 'Дата создания',
           align: 'center',
-          field: 'dateCreated',
+          field: 'createdAt',
           sortable: true,
         },
         {
-          name: 'dateUpdated',
+          name: 'updatedAt',
           label: 'Дата изменения',
           align: 'center',
-          field: 'dateUpdated',
+          field: 'updatedAt',
           sortable: true,
         },
         {
@@ -57,20 +127,64 @@ export default {
           required: true,
         },
       ],
-      visibleColumns: ['desc', 'enabled', 'row-actions'],
+      visibleColumns: ['desc', 'enabled', 'createdAt', 'row-actions'],
+      filter: '',         // фильтр таблицы
+      addFormFields: {    // поля формы добавления документа
+        name: null,
+        enabled: true,
+      },
+      showDialog: false,  // показать/скрыть диалог добавления
     };
   },
 
   computed: {
     ...mapState({
-      // источник данных
-      ds: state => state.ds.dsCustomers,
+      ds: state => state.ds.dsCustomers,        // источник данных
+      isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
       getErrorMessage: 'appMode/getErrorMessage',
     }),
+    ...mapActions({
+      getDocuments: 'ds/getCustomers',
+      addDocument: 'ds/addCustomer',
+      deleteDocument: 'ds/deleteCustomer',
+      updateDocument: 'ds/updateCustomer',
+    }),
   },
 
+  methods: {
+    // создать документ
+    AddDocument() {
+      this.showDialog = true;
+    },
+
+    onShow() {
+      // this.$refs.ff.select();
+    },
+
+    async onAdd() {
+      // const res = this.addDocument(this.addFormFields);
+      // res.then((response) => {
+      //   this.$q.notify({
+      //     color: 'positive',
+      //     position: 'top',
+      //     message: `Документ '${response.data.name}' успешно создан.`,
+      //     icon: 'save'
+      //   });
+      // })
+      //   .catch((err) => {
+      //     const errMessage = this.getErrorMessage('post', err);
+      //     this.$q.notify({
+      //       color: 'negative',
+      //       position: 'top',
+      //       message: errMessage,
+      //       icon: 'report_problem'
+      //     });
+      //   });
+    },
+
+  },
 };
 </script>
 

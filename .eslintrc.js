@@ -32,7 +32,8 @@ module.exports = {
   // add your custom rules here
   rules: {
     'max-len': ["error", { "code": 140 }],
-    
+    'no-multi-spaces': ["error", { "ignoreEOLComments": true }],
+
     'no-param-reassign': 'off',
 
     'import/first': 'off',
