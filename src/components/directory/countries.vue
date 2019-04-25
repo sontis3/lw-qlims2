@@ -12,7 +12,7 @@
     >
       <template v-slot:top-right="props">
         <!-- кнопка добавления документа -->
-        <q-btn flat round dense icon="add_box" @click="AddDocument"/>
+        <q-btn flat round dense icon="add_box" @click="onAddDocument"/>
         <!-- поиск -->
         <q-input v-model="filter" filled dense type="search" debounce="300" color="secondary">
           <template v-slot:append>
@@ -20,7 +20,7 @@
           </template>
         </q-input>
         <q-space/>
-        <!-- выбор показуваемых столбцов -->
+        <!-- выбор показываемых столбцов -->
         <q-select
           v-model="visibleColumns"
           multiple
@@ -46,24 +46,20 @@
     </q-table>
 
     <!-- Диалог добавления документа -->
-    <q-dialog v-model="showDialog" persistent @show="onShow">
+    <q-dialog v-model="showDialog" no-backdrop-dismiss>
       <q-card>
         <q-card-section>
           <div class="text-h6">Добавление новой страны</div>
         </q-card-section>
         <q-card-section>
-          <div slot="body">
-            <div class="row q-mb-md">
-              <q-input
-                v-model="addFormFields.name_ru"
-                type="text"
-                float-label="Наименование заказчика"
-                ref="ff"
-              />
-            </div>
-            <div class="row q-mb-md">
-              <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
-            </div>
+          <div class="row q-mb-md">
+            <q-input v-model="addFormFields.name_ru" autofocus label="Наименование рус"/>
+          </div>
+          <div class="row q-mb-md">
+            <q-input v-model="addFormFields.name_en" label="Наименование англ"/>
+          </div>
+          <div class="row q-mb-md">
+            <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
           </div>
         </q-card-section>
 
@@ -80,7 +76,7 @@
 import {
   mapState,
   mapGetters,
-  // mapMutations,
+  mapMutations,
   mapActions,
 } from 'vuex';
 
@@ -141,45 +137,48 @@ export default {
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
-      getErrorMessage: 'appMode/getErrorMessage',
+      getErrorDescription: 'appMode/getErrorDescription',
     }),
+  },
+
+  methods: {
+    ...mapMutations({
+      addErrorNotification: 'appMode/addErrorNotification',
+    }),
+
     ...mapActions({
       getDocuments: 'ds/getCountries',
       addDocument: 'ds/addCountry',
       deleteDocument: 'ds/deleteCountry',
       updateDocument: 'ds/updateCountry',
     }),
-  },
-
-  methods: {
     // создать документ
-    AddDocument() {
+    onAddDocument() {
       this.showDialog = true;
     },
 
-    onShow() {
-      // this.$refs.ff.select();
-    },
-
     async onAdd() {
-      // const res = this.addDocument(this.addFormFields);
-      // res.then((response) => {
-      //   this.$q.notify({
-      //     color: 'positive',
-      //     position: 'top',
-      //     message: `Документ '${response.data.name}' успешно создан.`,
-      //     icon: 'save'
-      //   });
-      // })
-      //   .catch((err) => {
-      //     const errMessage = this.getErrorMessage('post', err);
-      //     this.$q.notify({
-      //       color: 'negative',
-      //       position: 'top',
-      //       message: errMessage,
-      //       icon: 'report_problem'
-      //     });
-      //   });
+      const res = this.addDocument(this.addFormFields);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Документ '${response.data.name}' успешно создан.`,
+          icon: 'save',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('post', err);
+
+          this.addErrorNotification({ message: err.message, description: errDescription });
+
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        });
     },
 
   },

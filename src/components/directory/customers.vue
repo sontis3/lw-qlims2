@@ -46,24 +46,17 @@
     </q-table>
 
     <!-- Диалог добавления документа -->
-    <q-dialog v-model="showDialog" persistent @show="onShow">
+    <q-dialog v-model="showDialog" no-backdrop-dismiss>
       <q-card>
         <q-card-section>
           <div class="text-h6">Добавление нового заказчика</div>
         </q-card-section>
         <q-card-section>
-          <div slot="body">
-            <div class="row q-mb-md">
-              <q-input
-                v-model="addFormFields.name"
-                type="text"
-                float-label="Наименование заказчика"
-                ref="ff"
-              />
-            </div>
-            <div class="row q-mb-md">
-              <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
-            </div>
+          <div class="row q-mb-md">
+            <q-input v-model="addFormFields.name" autofocus label="Наименование"/>
+          </div>
+          <div class="row q-mb-md">
+            <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
           </div>
         </q-card-section>
 
@@ -145,7 +138,7 @@ export default {
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
-      getErrorMessage: 'appMode/getErrorMessage',
+      getErrorDescription: 'appMode/getErrorDescription',
     }),
     ...mapActions({
       getDocuments: 'ds/getCustomers',
@@ -161,10 +154,6 @@ export default {
       this.showDialog = true;
     },
 
-    onShow() {
-      // this.$refs.ff.select();
-    },
-
     async onAdd() {
       // const res = this.addDocument(this.addFormFields);
       // res.then((response) => {
@@ -176,7 +165,7 @@ export default {
       //   });
       // })
       //   .catch((err) => {
-      //     const errMessage = this.getErrorMessage('post', err);
+      //     const errMessage = this.getErrorDescription('post', err);
       //     this.$q.notify({
       //       color: 'negative',
       //       position: 'top',

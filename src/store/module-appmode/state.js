@@ -28,15 +28,15 @@ export default {
   showAddDialog: false,
   // массив уведомлений системных ошибок
   errorNotifications: [
-    {
-      dateTime: new Date(),
-      message: 'Это заглушка 1',
-      status: 'Статус ошибки 123',
-    },
-    {
-      dateTime: new Date(),
-      message: 'Это заглушка 2',
-      status: 'Статус ошибки 123',
-    },
+    // {
+    //   dateTime: new Date(),
+    //   message: 'Это заглушка 1',
+    //   status: 'Статус ошибки 123',
+    // },
+    // {
+    //   dateTime: new Date(),
+    //   message: 'Это заглушка 2',
+    //   status: 'Статус ошибки 123',
+    // },
   ],
 };

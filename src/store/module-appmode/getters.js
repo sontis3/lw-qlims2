@@ -3,27 +3,19 @@ export const getActionsTreeData = state => state.treeActionsTemplate;
 
 // сформировать сообщение об ошибке от сервера
 /* eslint no-unused-vars: ["error", { "args": "none" }] */
-export const getErrorMessage = state => (httpMethod, err) => {
+export const getErrorDescription = state => (httpMethod, err) => {
   /* eslint prefer-destructuring: ["error", {VariableDeclarator: {object: false}}] */
   const responseURL = err.request.responseURL ? err.request.responseURL : err.config.url;
   const { method } = err.config;
 
-  let errStatus;
+  let ErrorDescription;
   if (err.response) {
-    errStatus = `Status: ${err.response.status}.  ${err.response.data.message} = ${method} ${responseURL}`;
+    ErrorDescription = `Status: ${err.response.status}.  ${err.response.data.message} = ${method} ${responseURL}`;
   } else {
-    errStatus = `${err.message} = ${httpMethod} ${responseURL}`;
+    ErrorDescription = `${err.message} = ${httpMethod} ${responseURL}`;
   }
 
-  // запись уведомления об ошибке
-  const errNotification = {
-    dateTime: new Date(),
-    message: err.message,
-    status: errStatus,
-  };
-  state.errorNotifications.push(errNotification);
-
-  return errStatus;
+  return ErrorDescription;
 };
 
 export { getActionsTreeData as default };

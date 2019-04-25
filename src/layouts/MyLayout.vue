@@ -51,10 +51,10 @@
                     </q-item-section>
                     <q-item-section lines="1">{{item.dateTime.toLocaleString()}}::{{item.message}}</q-item-section>
                     <q-item-section side>
-                      <q-btn flat dense icon="clear" @click="onDeleteNotification(index)"/>
+                      <q-btn flat dense icon="clear" @click="deleteErrorNotification(index)"/>
                     </q-item-section>
                   </template>
-                  <div>{{item.status}}</div>
+                  <div>{{item.descr}}</div>
                 </q-expansion-item>
               </q-list>
             </q-menu>
@@ -112,13 +112,9 @@ export default {
 
     ...mapMutations({
       changeSelectedAction: 'appMode/changeSelectedAction',
+      deleteErrorNotification: 'appMode/deleteErrorNotification',
     }),
 
-    // по нажатию кнопки удаления оповещения
-    onDeleteNotification(index) {
-      // this.errorNotifications.splice(index, 1);
-      this.$delete(this.errorNotifications, index);
-    },
     // выбрана акция в дереве
     actionNodeSelected(target) {
       this.changeSelectedAction(target);

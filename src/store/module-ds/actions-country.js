@@ -7,11 +7,11 @@ export const getCountries = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addCustomer = async ({ getters, dispatch }, obj) => {
-  const url = getters.customersUrl;
+export const addCountry = async ({ getters, dispatch }, obj) => {
+  const url = getters.countriesUrl;
 
   const response = await axios.post(url, obj);
-  await dispatch('getCustomers');
+  await dispatch('getCountries');
   return response;
 };
 
@@ -20,7 +20,7 @@ export const deleteCustomer = async ({ getters, dispatch }, id) => {
   const url = `${getters.customersUrl}/${id}`;
 
   const response = await axios.delete(url);
-  await dispatch('getCustomers');
+  await dispatch('getCountries');
   return response;
 };
 
