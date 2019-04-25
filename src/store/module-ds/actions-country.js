@@ -16,7 +16,7 @@ export const addCountry = async ({ getters, dispatch }, obj) => {
 };
 
 // удалить документ
-export const deleteCustomer = async ({ getters, dispatch }, id) => {
+export const deleteCountry = async ({ getters, dispatch }, id) => {
   const url = `${getters.customersUrl}/${id}`;
 
   const response = await axios.delete(url);
@@ -25,7 +25,7 @@ export const deleteCustomer = async ({ getters, dispatch }, id) => {
 };
 
 // изменить документ
-export const updateCustomer = async ({ getters }, obj) => {
+export const updateCountry = async ({ getters }, obj) => {
   const url = `${getters.customersUrl}/${obj.id}`;
 
   const putData = {

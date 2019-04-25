@@ -31,12 +31,12 @@ export default {
     // {
     //   dateTime: new Date(),
     //   message: 'Это заглушка 1',
-    //   status: 'Статус ошибки 123',
+    //   descr: 'Статус ошибки 123',
     // },
     // {
     //   dateTime: new Date(),
     //   message: 'Это заглушка 2',
-    //   status: 'Статус ошибки 123',
+    //   descr: 'Статус ошибки 123',
     // },
   ],
 };

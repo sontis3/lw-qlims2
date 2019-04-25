@@ -10,6 +10,7 @@
       dense
       separator="cell"
     >
+      <!-- слот панели кнопок вверху справа -->
       <template v-slot:top-right="props">
         <!-- кнопка добавления документа -->
         <q-btn flat round dense icon="add_box" @click="onAddDocument"/>
@@ -42,6 +43,12 @@
           @click="props.toggleFullscreen"
           class="q-ml-md"
         />
+      </template>
+
+      <template v-slot:body-cell-enabled="props">
+        <q-td :props="props">
+          <q-checkbox v-model="props.value"/>
+        </q-td>
       </template>
     </q-table>
 
@@ -133,7 +140,7 @@ export default {
 
   computed: {
     ...mapState({
-      ds: state => state.ds.dsCustomers,        // источник данных
+      ds: state => state.ds.dsCountries,        // источник данных
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
@@ -144,6 +151,7 @@ export default {
   methods: {
     ...mapMutations({
       addErrorNotification: 'appMode/addErrorNotification',
+      setLoading: 'ds/setLoading',
     }),
 
     ...mapActions({
@@ -157,19 +165,19 @@ export default {
       this.showDialog = true;
     },
 
+    // обработка события закрытия диалога создания нового документа
     async onAdd() {
       const res = this.addDocument(this.addFormFields);
       res.then((response) => {
         this.$q.notify({
           color: 'positive',
           position: 'top',
-          message: `Документ '${response.data.name}' успешно создан.`,
+          message: `Документ '${response.data.name_ru}' успешно создан.`,
           icon: 'save',
         });
       })
         .catch((err) => {
           const errDescription = this.getErrorDescription('post', err);
-
           this.addErrorNotification({ message: err.message, description: errDescription });
 
           this.$q.notify({
@@ -182,6 +190,26 @@ export default {
     },
 
   },
+
+  mounted() {
+    this.setLoading(true);
+    const res = this.getDocuments();
+    res.then()
+      .catch((err) => {
+        const errDescription = this.getErrorDescription('get', err);
+        this.addErrorNotification({ message: err.message, description: errDescription });
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: errDescription,
+          icon: 'report_problem',
+        });
+      })
+      .finally(() => {
+        this.setLoading(false);
+      });
+  },
+
 };
 </script>
 
