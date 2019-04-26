@@ -4,7 +4,7 @@
       title="Страны"
       :columns="columns"
       :visibleColumns="visibleColumns"
-      :data="ds"
+      :data="ds1"
       :filter="filter"
       :loading="isLoading"
       dense
@@ -47,7 +47,7 @@
 
       <template v-slot:body-cell-enabled="props">
         <q-td :props="props">
-          <q-checkbox v-model="props.value"/>
+          <q-checkbox v-model="props.value" @input="(val) => UpdateDocument(val, null, props.row, props.col.label)"/>
         </q-td>
       </template>
     </q-table>
@@ -140,12 +140,21 @@ export default {
 
   computed: {
     ...mapState({
-      ds: state => state.ds.dsCountries,        // источник данных
+      dsStore: state => state.ds.dsCountries,        // источник данных
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
     }),
+
+    ds1: {
+      get() {
+        return this.$store.state.ds.dsCountries;
+      },
+      // set(value) {
+      //   this.$store.commit('setDsCountries', value);
+      // },
+    },
   },
 
   methods: {
@@ -189,6 +198,37 @@ export default {
         });
     },
 
+    // изменить документ
+    UpdateDocument(val, initialValue, row, cLabel) {
+      this.setLoading(true);
+      // для видимости в catch
+      const initVal = initialValue;
+      const updatedRow = row;
+      const res = this.updateDocument(row);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Документ '${response.data.name}' успешно изменен. Поле [${cLabel}]`,
+          icon: 'update',
+        });
+      })
+        .catch((err) => {
+          const errMessage = this.getErrorMessage('put', err);
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errMessage,
+            icon: 'report_problem',
+          });
+          updatedRow.name = initVal;
+        })
+        .finally(() => {
+          // принудительное обновление документов необходимо, т.к. чекбокс при ощибке остается в неправильном состоянии
+          this.getDocuments();
+          this.setLoading(false);
+        });
+    },
   },
 
   mounted() {

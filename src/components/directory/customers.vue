@@ -98,7 +98,6 @@ export default {
           field: 'enabled',
           sortable: true,
           sort: (a, b) => a - b,
-          classes: 'as-checkbox',
         },
         {
           name: 'createdAt',
