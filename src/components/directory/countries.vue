@@ -47,7 +47,7 @@
 
       <template v-slot:body-cell-enabled="props">
         <q-td :props="props">
-          <q-checkbox v-model="props.value" @input="(val) => UpdateDocument(val, null, props.row, props.col.label)"/>
+          <q-checkbox :value="props.value" @input="(val) => UpdateDocument(val, props.row, props.col)"/>
         </q-td>
       </template>
     </q-table>
@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { extend } from 'quasar';
 import {
   mapState,
   mapGetters,
@@ -93,7 +94,7 @@ export default {
     return {
       columns: [
         {
-          name: 'desc_ru',               // уникальный ид столбца
+          name: 'desc_ru',            // уникальный ид столбца
           required: true,             // обязательный
           label: 'Наименование рус',  // заголовок столбца
           align: 'left',              // выравнивание
@@ -140,7 +141,6 @@ export default {
 
   computed: {
     ...mapState({
-      dsStore: state => state.ds.dsCountries,        // источник данных
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
@@ -151,9 +151,9 @@ export default {
       get() {
         return this.$store.state.ds.dsCountries;
       },
-      // set(value) {
-      //   this.$store.commit('setDsCountries', value);
-      // },
+      set(value) {
+        this.$store.commit('setDsCountries', value);
+      },
     },
   },
 
@@ -199,33 +199,32 @@ export default {
     },
 
     // изменить документ
-    UpdateDocument(val, initialValue, row, cLabel) {
+    UpdateDocument(val, row, col) {
       this.setLoading(true);
-      // для видимости в catch
-      const initVal = initialValue;
-      const updatedRow = row;
-      const res = this.updateDocument(row);
+      // создание копии и её изменение
+      const updatedRow = extend({}, row);
+      updatedRow[col.field] = val;
+      const res = this.updateDocument(updatedRow);
       res.then((response) => {
         this.$q.notify({
           color: 'positive',
           position: 'top',
-          message: `Документ '${response.data.name}' успешно изменен. Поле [${cLabel}]`,
+          message: `Документ '${response.data.name_ru}' успешно изменен. Поле [${col.label}]`,
           icon: 'update',
         });
+        this.getDocuments();
       })
         .catch((err) => {
-          const errMessage = this.getErrorMessage('put', err);
+          const errDescription = this.getErrorDescription('put', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
           this.$q.notify({
             color: 'negative',
             position: 'top',
-            message: errMessage,
+            message: errDescription,
             icon: 'report_problem',
           });
-          updatedRow.name = initVal;
         })
         .finally(() => {
-          // принудительное обновление документов необходимо, т.к. чекбокс при ощибке остается в неправильном состоянии
-          this.getDocuments();
           this.setLoading(false);
         });
     },
