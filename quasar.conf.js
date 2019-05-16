@@ -60,6 +60,7 @@ module.exports = function (ctx) {
         'QSelect',
         'QSpace',
         'QCheckbox',
+        'QPopupEdit',
       ],
 
       directives: [

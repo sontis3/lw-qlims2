@@ -45,11 +45,88 @@
         />
       </template>
 
-      <template v-slot:body-cell-enabled="props">
-        <q-td :props="props">
-          <q-checkbox :value="props.value" @input="(val) => UpdateDocument(val, props.row, props.col)"/>
-        </q-td>
+      <!-- слот тела таблицы -->
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="desc_ru" :props="props">
+            {{ props.row.name_ru }}
+            <q-popup-edit
+              :value="props.row.name_ru"
+              @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru')"
+              buttons
+            >
+              <q-input :value="props.row.name_ru" count/>
+        <!-- <q-popup-edit v-model="props.row.name_ru" @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru')" buttons>
+        <q-input v-model="props.row.name_ru" count/>-->
+        <!-- <q-popup-edit v-model="props.row.name_ru" buttons>
+        <q-input v-model="props.row.name_ru" count/>-->
+            </q-popup-edit>
+          </q-td>
+          <q-td key="desc_en" :props="props">{{ props.row.name_en }}</q-td>
+          <q-td key="enabled" :props="props">
+            <q-checkbox
+              :value="props.row.enabled"
+              @input="(val) => onUpdateDocument(val, props.row, 'enabled')"
+            />
+          </q-td>
+
+          <q-td key="rowActions" :props="props">
+            <!-- <q-btn round size="xs" icon="edit" @click="onEditDocument(props.row)"/> -->
+            <q-btn round size="xs" icon="delete">
+              <q-menu
+                anchor="bottom left"
+                self="top left"
+                :content-style="popoverStyle"
+                @show="showPopover"
+                auto-close
+              >
+                <span id="popover-title">Документ выбран для удаления</span>
+                <div id="del-buttons">
+                  <q-btn
+                    outliner
+                    rounded
+                    dense
+                    size="form-label-inverted"
+                    color="red-14"
+                    text-color="white"
+                    label="Отменить"
+                  />
+                  <q-btn
+                    outliner
+                    rounded
+                    dense
+                    color="red-4"
+                    text-color="white"
+                    label="Удалить"
+                    @click="onDeleteDocument(props.row)"
+                  />
+                </div>
+              </q-menu>
+            </q-btn>
+          </q-td>
+
+          <!-- <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <template v-if="col.classes === 'popup-edit'">
+              {{ col.value }}
+              <q-popup-edit
+                :value="props.row[col.field]"
+                @save="(val, initialValue) => UpdateDocument(val, initialValue, props.row, col.label)"
+              >
+                <q-input v-model="props.row[col.field]" count/>
+              </q-popup-edit>
+            </template>
+          </q-td>-->
+        </q-tr>
       </template>
+      <!-- слот ячейки Действующий -->
+      <!-- <template v-slot:body-cell-enabled="props">
+        <q-td :props="props">
+          <q-checkbox
+            :value="props.value"
+            @input="(val) => UpdateDocument(val, props.row, props.col.field)"
+          />
+        </q-td>
+      </template>-->
     </q-table>
 
     <!-- Диалог добавления документа -->
@@ -119,6 +196,7 @@ export default {
           sortable: true,
           sort: (a, b) => a - b,
           classes: 'as-checkbox',
+          style: 'width: 80px',
         },
         {
           name: 'rowActions',
@@ -126,7 +204,17 @@ export default {
           align: 'right',
           field: 'rowActions',
           required: true,
+          style: 'width: 80px',
         },
+      ],
+      ds: [
+        {
+          id: '5caf4dd959c33c3884502fb4',
+          name_ru: 'йцу',
+          name_en: 'qwe',
+          enabled: true,
+        },
+
       ],
       visibleColumns: ['desc_ru', 'desc_en', 'enabled', 'row-actions'],
       filter: '',         // фильтр таблицы
@@ -136,6 +224,12 @@ export default {
         enabled: true,
       },
       showDialog: false,  // показать/скрыть диалог добавления
+      popoverStyle: {
+        backgroundColor: 'red',
+        minWidth: '0px',
+        display: 'inline-flex',
+        flexWrap: 'nowrap',
+      },
     };
   },
 
@@ -199,17 +293,17 @@ export default {
     },
 
     // изменить документ
-    UpdateDocument(val, row, col) {
+    onUpdateDocument(val, row, col) {
       this.setLoading(true);
       // создание копии и её изменение
       const updatedRow = extend({}, row);
-      updatedRow[col.field] = val;
+      updatedRow[col] = val;
       const res = this.updateDocument(updatedRow);
       res.then((response) => {
         this.$q.notify({
           color: 'positive',
           position: 'top',
-          message: `Документ '${response.data.name_ru}' успешно изменен. Поле [${col.label}]`,
+          message: `Документ '${response.data.name_ru}' успешно изменен. Поле [${col}]`,
           icon: 'update',
         });
         this.getDocuments();
@@ -227,6 +321,39 @@ export default {
         .finally(() => {
           this.setLoading(false);
         });
+    },
+
+    // удалить документ
+    onDeleteDocument(row) {
+      const { id } = row;
+      this.setLoading(true);
+      const res = this.deleteDocument(id);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Документ '${response.data.name_ru}' успешно удален.`,
+          icon: 'delete',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('delete', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
+    },
+
+    showPopover() {
+      // выставить ширину как у строки таблицы
+      this.popoverStyle.minWidth = `${this.$el.querySelector('.q-table tbody tr').clientWidth}px`;
     },
   },
 
@@ -253,4 +380,14 @@ export default {
 </script>
 
 <style>
+#popover-title {
+  margin-left: 8px;
+}
+
+#del-buttons {
+  display: inline-flex;
+  margin-left: auto;
+  justify-content: space-around;
+  width: 176px;
+}
 </style>
