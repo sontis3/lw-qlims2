@@ -164,9 +164,11 @@ import {
   mapMutations,
   mapActions,
 } from 'vuex';
+import { PageContainer } from '../mixins/page-container';
 
 export default {
   // name: 'ComponentName',
+  mixins: [PageContainer],
   data() {
     return {
       columns: [
@@ -357,24 +359,24 @@ export default {
     },
   },
 
-  mounted() {
-    this.setLoading(true);
-    const res = this.getDocuments();
-    res.then()
-      .catch((err) => {
-        const errDescription = this.getErrorDescription('get', err);
-        this.addErrorNotification({ message: err.message, description: errDescription });
-        this.$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: errDescription,
-          icon: 'report_problem',
-        });
-      })
-      .finally(() => {
-        this.setLoading(false);
-      });
-  },
+  // mounted() {
+  //   this.setLoading(true);
+  //   const res = this.getDocuments();
+  //   res.then()
+  //     .catch((err) => {
+  //       const errDescription = this.getErrorDescription('get', err);
+  //       this.addErrorNotification({ message: err.message, description: errDescription });
+  //       this.$q.notify({
+  //         color: 'negative',
+  //         position: 'top',
+  //         message: errDescription,
+  //         icon: 'report_problem',
+  //       });
+  //     })
+  //     .finally(() => {
+  //       this.setLoading(false);
+  //     });
+  // },
 
 };
 </script>

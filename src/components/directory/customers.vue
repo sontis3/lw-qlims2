@@ -73,7 +73,7 @@
 import {
   mapState,
   mapGetters,
-  // mapMutations,
+  mapMutations,
   mapActions,
 } from 'vuex';
 
@@ -139,15 +139,21 @@ export default {
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
     }),
+  },
+
+  methods: {
+    ...mapMutations({
+      addErrorNotification: 'appMode/addErrorNotification',
+      setLoading: 'ds/setLoading',
+    }),
+
     ...mapActions({
       getDocuments: 'ds/getCustomers',
       addDocument: 'ds/addCustomer',
       deleteDocument: 'ds/deleteCustomer',
       updateDocument: 'ds/updateCustomer',
     }),
-  },
 
-  methods: {
     // создать документ
     AddDocument() {
       this.showDialog = true;
@@ -175,6 +181,26 @@ export default {
     },
 
   },
+
+  mounted() {
+    this.setLoading(true);
+    const res = this.getDocuments();
+    res.then()
+      .catch((err) => {
+        const errDescription = this.getErrorDescription('get', err);
+        this.addErrorNotification({ message: err.message, description: errDescription });
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: errDescription,
+          icon: 'report_problem',
+        });
+      })
+      .finally(() => {
+        this.setLoading(false);
+      });
+  },
+
 };
 </script>
 
