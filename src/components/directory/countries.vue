@@ -52,11 +52,13 @@
             {{ props.row.name_ru }}
             <q-popup-edit
               :value="props.row.name_ru"
-              @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru')"
+              @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru', 'name_ru')"
               buttons
             >
               <q-input :value="props.row.name_ru" count/>
-        <!-- <q-popup-edit v-model="props.row.name_ru" @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru')" buttons>
+        <!-- <q-popup-edit v-model="props.row.name_ru"
+          @save="(val, initialValue) => onUpdateDocument(val, props.row, 'name_ru', 'name_ru')"
+          buttons>
         <q-input v-model="props.row.name_ru" count/>-->
         <!-- <q-popup-edit v-model="props.row.name_ru" buttons>
         <q-input v-model="props.row.name_ru" count/>-->
@@ -66,7 +68,7 @@
           <q-td key="enabled" :props="props">
             <q-checkbox
               :value="props.row.enabled"
-              @input="(val) => onUpdateDocument(val, props.row, 'enabled')"
+              @input="(val) => onUpdateDocument(val, props.row, 'enabled', 'name_ru')"
             />
           </q-td>
 
@@ -149,7 +151,7 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" @click="onAdd" v-close-popup/>
+          <q-btn flat label="Add" @click="onAdd('name_ru')" v-close-popup/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -157,7 +159,7 @@
 </template>
 
 <script>
-import { extend } from 'quasar';
+// import { extend } from 'quasar';
 import {
   mapState,
   mapGetters,
@@ -225,7 +227,6 @@ export default {
         name_en: null,
         enabled: true,
       },
-      showDialog: false,  // показать/скрыть диалог добавления
       popoverStyle: {
         backgroundColor: 'red',
         minWidth: '0px',
@@ -265,65 +266,6 @@ export default {
       deleteDocument: 'ds/deleteCountry',
       updateDocument: 'ds/updateCountry',
     }),
-    // создать документ
-    onAddDocument() {
-      this.showDialog = true;
-    },
-
-    // обработка события закрытия диалога создания нового документа
-    async onAdd() {
-      const res = this.addDocument(this.addFormFields);
-      res.then((response) => {
-        this.$q.notify({
-          color: 'positive',
-          position: 'top',
-          message: `Документ '${response.data.name_ru}' успешно создан.`,
-          icon: 'save',
-        });
-      })
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('post', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        });
-    },
-
-    // изменить документ
-    onUpdateDocument(val, row, col) {
-      this.setLoading(true);
-      // создание копии и её изменение
-      const updatedRow = extend({}, row);
-      updatedRow[col] = val;
-      const res = this.updateDocument(updatedRow);
-      res.then((response) => {
-        this.$q.notify({
-          color: 'positive',
-          position: 'top',
-          message: `Документ '${response.data.name_ru}' успешно изменен. Поле [${col}]`,
-          icon: 'update',
-        });
-        this.getDocuments();
-      })
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('put', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
-        });
-    },
 
     // удалить документ
     onDeleteDocument(row) {
@@ -358,25 +300,6 @@ export default {
       this.popoverStyle.minWidth = `${this.$el.querySelector('.q-table tbody tr').clientWidth}px`;
     },
   },
-
-  // mounted() {
-  //   this.setLoading(true);
-  //   const res = this.getDocuments();
-  //   res.then()
-  //     .catch((err) => {
-  //       const errDescription = this.getErrorDescription('get', err);
-  //       this.addErrorNotification({ message: err.message, description: errDescription });
-  //       this.$q.notify({
-  //         color: 'negative',
-  //         position: 'top',
-  //         message: errDescription,
-  //         icon: 'report_problem',
-  //       });
-  //     })
-  //     .finally(() => {
-  //       this.setLoading(false);
-  //     });
-  // },
 
 };
 </script>
