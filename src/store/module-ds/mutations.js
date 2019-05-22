@@ -37,3 +37,8 @@ export const setDsMasterSchedules = (state, payload) => {
 export const setLoading = (state, newValue) => {
   state.isLoading = newValue;
 };
+
+// изменить источник данных Заказчики
+export const updateDsCustomers = (state, payload) => {
+  payload.data[payload.column] = payload.newValue;
+};

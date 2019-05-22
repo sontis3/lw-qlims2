@@ -56,16 +56,36 @@
               />
             </template>
 
-            <!-- <template v-else-if="col.classes === 'popup-edit'" :props="props">
+            <template v-else-if="col.classes === 'popup-edit'" :props="props">
               {{ col.value }}
               <q-popup-edit
+                v-model="popupEditData"
+                buttons
+                @show="() => onShowPopup(props.row, col.field)"
+                @save="(val, initval) => onUpdateDocument(val, props.row, col.field, 'name')"
+              >
+                <q-input
+                  v-model="popupEditData"
+                  dense
+                  counter
+                  autofocus
+                />
+              </q-popup-edit>
+              <!-- <q-popup-edit
                 :value="props.row[col.field]"
-                @save="(val, initialValue) => onUpdateDocument(val, props.row, col.field, 'name')"
+                @save="(val, initialVal) => onUpdateDocument(val, props.row, col.field, 'name')"
+                @cancel="(val, initialVal) => onUpdateStore(initialVal, props.row, col.field)"
                 buttons
               >
-                <q-input :value="props.row.name_ru" count/>
-              </q-popup-edit>
-            </template> -->
+                <q-input
+                  :value="props.row[col.field]"
+                  dense
+                  counter
+                  autofocus
+                  @input="(val) => onUpdateStore(val, props.row, col.field)"
+                />
+              </q-popup-edit> -->
+            </template>
             <template v-else>{{ col.value }}</template>
           </q-td>
         </q-tr>
@@ -83,7 +103,17 @@
             <q-input v-model="addFormFields.name" autofocus label="Наименование"/>
           </div>
           <div class="row q-mb-md">
-            <q-checkbox v-model="addFormFields.enabled" label="Активен"/>
+            <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
+          </div>
+          <div class="row q-mb-md">
+            <q-select
+              v-model="addFormFields.countryId"
+              :options="dsCountries"
+              option-value="name_ru"
+              float-label="Страна"
+            />
+            <!-- :error="$v.addFormFields.countryId.$error"
+            />-->
           </div>
         </q-card-section>
 
@@ -237,15 +267,18 @@ export default {
       addFormFields: {    // поля формы добавления документа
         name: null,
         enabled: true,
+        countryId: null,
         email: '123@456.com',
         phone_1: '8-916-123-45-67',
       },
+      popupEditData: '',
     };
   },
 
   computed: {
     ...mapState({
       ds: state => state.ds.dsCustomers,        // источник данных
+      dsCountries: state => state.ds.dsCountries,        // источник данных Страны
       isLoading: state => state.ds.isLoading,
     }),
     ...mapGetters({
@@ -257,6 +290,7 @@ export default {
     ...mapMutations({
       addErrorNotification: 'appMode/addErrorNotification',
       setLoading: 'ds/setLoading',
+      updateDsCustomers: 'ds/updateDsCustomers',
     }),
 
     ...mapActions({
@@ -266,6 +300,9 @@ export default {
       updateDocument: 'ds/updateCustomer',
     }),
 
+    onShowPopup(row, col) {
+      this.popupEditData = row[col];
+    },
   },
 
 };
