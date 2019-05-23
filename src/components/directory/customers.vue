@@ -64,27 +64,8 @@
                 @show="() => onShowPopup(props.row, col.field)"
                 @save="(val, initval) => onUpdateDocument(val, props.row, col.field, 'name')"
               >
-                <q-input
-                  v-model="popupEditData"
-                  dense
-                  counter
-                  autofocus
-                />
+                <q-input v-model="popupEditData" dense counter autofocus/>
               </q-popup-edit>
-              <!-- <q-popup-edit
-                :value="props.row[col.field]"
-                @save="(val, initialVal) => onUpdateDocument(val, props.row, col.field, 'name')"
-                @cancel="(val, initialVal) => onUpdateStore(initialVal, props.row, col.field)"
-                buttons
-              >
-                <q-input
-                  :value="props.row[col.field]"
-                  dense
-                  counter
-                  autofocus
-                  @input="(val) => onUpdateStore(val, props.row, col.field)"
-                />
-              </q-popup-edit> -->
             </template>
             <template v-else>{{ col.value }}</template>
           </q-td>
@@ -100,20 +81,36 @@
         </q-card-section>
         <q-card-section>
           <div class="row q-mb-md">
-            <q-input v-model="addFormFields.name" autofocus label="Наименование"/>
+            <q-input
+              v-model="addFormFields.name"
+              autofocus
+              label="Наименование"
+              lazy-rules
+              :rules="[ val => val && val.length > 1 || 'Введите имя']"
+            />
           </div>
           <div class="row q-mb-md">
             <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
           </div>
           <div class="row q-mb-md">
             <q-select
-              v-model="addFormFields.countryId"
+              v-model="addFormFields.countryObj"
               :options="dsCountries"
-              option-value="name_ru"
-              float-label="Страна"
-            />
-            <!-- :error="$v.addFormFields.countryId.$error"
-            />-->
+              option-value="id"
+              option-label="name_ru"
+              label="Страна"
+              style="width: 120px"
+              filled
+              dense
+              options-dense
+            ></q-select>
+          </div>
+          <div class="row q-mb-md">
+            <q-input v-model="addFormFields.email" label="Почта" type="email">
+              <template v-slot:before>
+                <q-icon name="mail"/>
+              </template>
+            </q-input>
           </div>
         </q-card-section>
 
@@ -267,7 +264,7 @@ export default {
       addFormFields: {    // поля формы добавления документа
         name: null,
         enabled: true,
-        countryId: null,
+        countryObj: null,
         email: '123@456.com',
         phone_1: '8-916-123-45-67',
       },
@@ -298,6 +295,7 @@ export default {
       addDocument: 'ds/addCustomer',
       deleteDocument: 'ds/deleteCustomer',
       updateDocument: 'ds/updateCustomer',
+      getCountries: 'ds/getCountries',
     }),
 
     onShowPopup(row, col) {
@@ -305,6 +303,11 @@ export default {
     },
   },
 
+  mounted() {
+    if (this.dsCountries.length === 0) {
+      this.getCountries();
+    }
+  },
 };
 </script>
 
