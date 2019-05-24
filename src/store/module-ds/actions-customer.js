@@ -9,8 +9,17 @@ export const getCustomers = async ({ commit, getters }) => {
 // добавить документ
 export const addCustomer = async ({ getters, dispatch }, obj) => {
   const url = getters.customersUrl;
+  const countryObjId = obj.countryObj ? obj.countryObj.id : null;
 
-  const response = await axios.post(url, obj);
+  const postData = {
+    name: obj.name,
+    enabled: obj.enabled,
+    countryId: countryObjId,
+    email: obj.email,
+    phone_1: obj.phone_1,
+  };
+
+  const response = await axios.post(url, postData);
   await dispatch('getCustomers');
   return response;
 };

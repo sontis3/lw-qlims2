@@ -120,6 +120,20 @@
               <template v-slot:error>Ошибка формата адреса эл. почты.</template>
             </q-input>
           </div>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="addFormFields.phone_1"
+              :error="$v.addFormFields.phone_1.$error"
+              label="Телефон 1"
+              type="tel"
+              bottom-slots
+            >
+              <template v-slot:before>
+                <q-icon name="phone"/>
+              </template>
+              <template v-slot:error>Ошибка формата номера телефона.</template>
+            </q-input>
+          </div>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -280,7 +294,7 @@ export default {
         enabled: true,
         countryObj: null,
         email: '123@456.com',
-        phone_1: '8-916-123-45-67',
+        phone_1: '89161234567',
       },
     };
   },
@@ -290,6 +304,7 @@ export default {
     addFormFields: {
       name: { required, minLength: minLength(2) },
       email: { required, email },
+      phone_1: { required },
     },
   },
 
