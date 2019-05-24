@@ -27,10 +27,14 @@ export const deleteCustomer = async ({ getters, dispatch }, id) => {
 // изменить документ
 export const updateCustomer = async ({ getters }, obj) => {
   const url = `${getters.customersUrl}/${obj.id}`;
+  const countryObjId = obj.countryObj ? obj.countryObj.id : null;
 
   const putData = {
     name: obj.name,
     enabled: obj.enabled,
+    countryId: countryObjId,
+    email: obj.email,
+    phone_1: obj.phone_1,
   };
 
   const header = { 'Content-type': 'application/json' };

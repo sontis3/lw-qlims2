@@ -3,7 +3,9 @@ import { extend } from 'quasar';
 export const PageContainer = {
   data() {
     return {
-      showDialog: false,  // показать/скрыть диалог добавления
+      showDialog: false,    // показать/скрыть диалог добавления
+      popupEditData: '',    // буфер для всплывающего редактора
+      addFormValid: true,   // форма добавления документа валидна?
     };
   },
 
@@ -66,6 +68,22 @@ export const PageContainer = {
         .finally(() => {
           this.setLoading(false);
         });
+    },
+
+    // заполнение буфера всплывающего редактора данными из vuex таблицы
+    onShowPopup(row, col) {
+      this.popupEditData = row[col];
+    },
+
+    // валидация формы добавления документа
+    validateAndClose(fieldName) {
+      this.$v.addFormFields.$touch();
+      if (this.$v.addFormFields.$error) {
+        this.addFormValid = false;
+        return;
+      }
+      this.addFormValid = true;
+      this.onAdd(fieldName);
     },
 
   },

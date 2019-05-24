@@ -62,7 +62,7 @@
                 v-model="popupEditData"
                 buttons
                 @show="() => onShowPopup(props.row, col.field)"
-                @save="(val, initval) => onUpdateDocument(val, props.row, col.field, 'name')"
+                @save="(val, initval) => { onUpdateDocument(val, props.row, col.field, 'name'); popupEditData = ''; }"
               >
                 <q-input v-model="popupEditData" dense counter autofocus/>
               </q-popup-edit>
@@ -85,9 +85,10 @@
               v-model="addFormFields.name"
               autofocus
               label="Наименование"
-              lazy-rules
-              :rules="[ val => val && val.length > 1 || 'Введите имя']"
-            />
+              :error="$v.addFormFields.name.$error"
+            >
+              <template v-slot:error>Введите заказчика.</template>
+            </q-input>
           </div>
           <div class="row q-mb-md">
             <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
@@ -106,17 +107,24 @@
             ></q-select>
           </div>
           <div class="row q-mb-md">
-            <q-input v-model="addFormFields.email" label="Почта" type="email">
+            <q-input
+              v-model="addFormFields.email"
+              label="Почта"
+              type="email"
+              bottom-slots
+              :error="$v.addFormFields.email.$error"
+            >
               <template v-slot:before>
                 <q-icon name="mail"/>
               </template>
+              <template v-slot:error>Ошибка формата адреса эл. почты.</template>
             </q-input>
           </div>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" @click="onAdd('name')" v-close-popup/>
+          <q-btn flat label="Add" @click="validateAndClose('name')" v-close-popup="addFormValid"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -130,6 +138,12 @@ import {
   mapMutations,
   mapActions,
 } from 'vuex';
+import {
+  required,
+  minLength,
+  email,
+  // sameAs
+} from 'vuelidate/lib/validators';
 import { PageContainer } from '../mixins/page-container';
 
 export default {
@@ -268,8 +282,15 @@ export default {
         email: '123@456.com',
         phone_1: '8-916-123-45-67',
       },
-      popupEditData: '',
     };
+  },
+
+  // правила валидации
+  validations: {
+    addFormFields: {
+      name: { required, minLength: minLength(2) },
+      email: { required, email },
+    },
   },
 
   computed: {
@@ -298,9 +319,6 @@ export default {
       getCountries: 'ds/getCountries',
     }),
 
-    onShowPopup(row, col) {
-      this.popupEditData = row[col];
-    },
   },
 
   mounted() {
