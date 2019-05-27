@@ -109,10 +109,9 @@
           <div class="row q-mb-md">
             <q-input
               v-model="addFormFields.email"
-              label="Почта"
-              type="email"
-              bottom-slots
               :error="$v.addFormFields.email.$error"
+              label="Почта"
+              bottom-slots
             >
               <template v-slot:before>
                 <q-icon name="mail"/>
