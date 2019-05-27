@@ -8,3 +8,6 @@ export const deliveryMethodsUrl = state => `${state.apiUrl}/${state.dirPartUrl}/
 export const studiesUrl = state => `${state.apiUrl}/${state.catalogsPartUrl}/${state.studiesPartUrl}`;
 export const studyContentUrl = (state, getters) => studyId => `${getters.studiesUrl}/${studyId}/${state.contentPartUrl}`;
 export const studyContentInfoUrl = (state, getters) => studyId => `${getters.studyContentUrl(studyId)}/${state.infoPartUrl}`;
+
+// получить действующие страны
+export const getEnabledCountries = state => state.dsCountries.filter(el => el.enabled);

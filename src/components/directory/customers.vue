@@ -96,7 +96,7 @@
           <div class="row q-mb-md">
             <q-select
               v-model="addFormFields.countryObj"
-              :options="dsCountries"
+              :options="getEnabledCountries"
               option-value="id"
               option-label="name_ru"
               label="Страна"
@@ -316,6 +316,7 @@ export default {
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
+      getEnabledCountries: 'ds/getEnabledCountries',
     }),
   },
 
