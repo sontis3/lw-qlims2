@@ -203,7 +203,7 @@ export default {
           label: 'Страна',
           align: 'left',
           field: row => row.country.name_ru,
-          rowFieldName: 'country',
+          rowFieldName: 'country',    // для ссылочных полей указывает на имя поля в строке
           sortable: true,
           classes: 'as-select',
         },
