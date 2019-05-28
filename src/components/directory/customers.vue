@@ -56,6 +56,20 @@
               />
             </template>
 
+            <template v-if="col.classes === 'as-select'" :props="props">
+              <q-select
+                :value="props.row[col.rowFieldName]"
+                :options="getEnabledCountries"
+                @input="(val) => onUpdateDocument(val, props.row, col.rowFieldName, 'name')"
+                option-value="id"
+                option-label="name_ru"
+                style="width: 120px"
+                filled
+                dense
+                options-dense
+              />
+            </template>
+
             <template v-else-if="col.classes === 'popup-edit'" :props="props">
               {{ col.value }}
               <q-popup-edit
@@ -95,7 +109,7 @@
           </div>
           <div class="row q-mb-md">
             <q-select
-              v-model="addFormFields.countryObj"
+              v-model="addFormFields.country"
               :options="getEnabledCountries"
               option-value="id"
               option-label="name_ru"
@@ -188,8 +202,10 @@ export default {
           required: true,
           label: 'Страна',
           align: 'left',
-          field: 'country',
+          field: row => row.country.name_ru,
+          rowFieldName: 'country',
           sortable: true,
+          classes: 'as-select',
         },
         {
           name: 'zip_code',
@@ -291,10 +307,11 @@ export default {
       addFormFields: {    // поля формы добавления документа
         name: null,
         enabled: true,
-        countryObj: null,
+        country: null,
         email: '123@456.com',
         phone_1: '89161234567',
       },
+      selectData: {},       // буфер для селекта в ячейке таблицы
     };
   },
 

@@ -9,7 +9,7 @@ export const getCustomers = async ({ commit, getters }) => {
 // добавить документ
 export const addCustomer = async ({ getters, dispatch }, obj) => {
   const url = getters.customersUrl;
-  const countryObjId = obj.countryObj ? obj.countryObj.id : null;
+  const countryObjId = obj.country ? obj.country.id : null;
 
   const postData = {
     name: obj.name,
@@ -36,7 +36,7 @@ export const deleteCustomer = async ({ getters, dispatch }, id) => {
 // изменить документ
 export const updateCustomer = async ({ getters }, obj) => {
   const url = `${getters.customersUrl}/${obj.id}`;
-  const countryObjId = obj.countryObj ? obj.countryObj.id : null;
+  const countryObjId = obj.country ? obj.country.id : null;
 
   const putData = {
     name: obj.name,

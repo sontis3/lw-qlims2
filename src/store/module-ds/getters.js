@@ -11,3 +11,6 @@ export const studyContentInfoUrl = (state, getters) => studyId => `${getters.stu
 
 // получить действующие страны
 export const getEnabledCountries = state => state.dsCountries.filter(el => el.enabled);
+
+// дополнить заказчиков
+// export const getEnabledCountries = state => state.dsCountries.filter(el => el.enabled);
