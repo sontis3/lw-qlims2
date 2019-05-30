@@ -1,7 +1,5 @@
 // мутация смены текущей акции
-export const changeSelectedAction = (state, newAction) => {
-  state.selectedActionId = newAction;
-};
+export const changeSelectedAction = (state, newAction) => { state.selectedActionId = newAction; };
 
 // сохранение уведомления об ошибке
 export const addErrorNotification = (state, obj) => {
@@ -15,6 +13,4 @@ export const addErrorNotification = (state, obj) => {
 };
 
 // удаление уведомления об ошибке
-export const deleteErrorNotification = (state, index) => {
-  state.errorNotifications.splice(index, 1);
-};
+export const deleteErrorNotification = (state, index) => { state.errorNotifications.splice(index, 1); };

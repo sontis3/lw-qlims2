@@ -6,6 +6,23 @@
           <q-icon name="menu"/>
         </q-btn>
         <q-toolbar-title>My App</q-toolbar-title>
+        <!-- кнопки в незарегистрированном состоянии -->
+        <q-btn-group v-if="credentials.length === 0">
+          <q-btn push @click="showRegistrationDialog=true" label="Зарегистрироваться" icon="person_add"/>
+          <q-btn push @click="showLoginDialog=true" label="Войти" icon="person"/>
+        </q-btn-group>
+        <!-- зарегистрирован -->
+        <q-btn-group v-else>
+          <q-btn-dropdown split label="Олег" icon="person">
+            <q-list>
+              <q-item clickable v-close-popup @click="showLogoutDialog=true">
+                <q-item-section>
+                  <q-item-label>Выход</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </q-btn-group>
       </q-toolbar>
     </q-header>
 
@@ -62,12 +79,100 @@
         </div>
       </div>
     </q-footer>
+
+    <!-- Диалог выхода -->
+    <q-dialog v-model="showLogoutDialog" no-backdrop-dismiss>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Вы хотите выйти из аккаунта?</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Выйти" @click="logout" v-close-popup/>
+          <q-btn flat label="Отмена" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Диалог регистрации пользователя -->
+    <q-dialog v-model="showRegistrationDialog" no-backdrop-dismiss>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Регистрация</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="regFormFields.name"
+              autofocus
+              label="Имя пользователя"
+              :error="$v.regFormFields.name.$error"
+            >
+              <template v-slot:error>Введите имя пользователя.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="regFormFields.email"
+              :error="$v.regFormFields.email.$error"
+              label="Электронная почта"
+              bottom-slots
+            >
+              <template v-slot:before>
+                <q-icon name="mail"/>
+              </template>
+              <template v-slot:error>Ошибка формата адреса эл. почты.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="regFormFields.password"
+              label="Пароль"
+              :error="$v.regFormFields.password.$error"
+            >
+              <template v-slot:error>Длина пароля должна быть не менее 6 символов.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="regFormFields.repeatPassword"
+              label="Подтвердите пароль"
+              :error="$v.regFormFields.repeatPassword.$error"
+            >
+              <template v-slot:error>Пароли должны быть идентичны.</template>
+            </q-input>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Зарегистрироваться" @click="validateAndClose($v.regFormFields)" v-close-popup="regFormValid"/>
+          <q-btn flat label="Отмена" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Диалог входа в систему -->
+    <q-dialog v-model="showLoginDialog" no-backdrop-dismiss>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Войти</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Войти" v-close-popup/>
+          <q-btn flat label="Отмена" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
 <script>
 import { openURL } from 'quasar';
 import { mapState, mapMutations, mapGetters } from 'vuex';
+import {
+  required,
+  minLength,
+  email,
+  sameAs,
+} from 'vuelidate/lib/validators';
 
 export default {
   name: 'MyLayout',
@@ -76,7 +181,28 @@ export default {
       leftDrawerOpen: this.$q.platform.is.desktop,
       selectedNode: '', // выбранный узел дерева акций
       expandedNodes: ['Directory'],
+      showLogoutDialog: false,      // флаг показа диалога выхода
+      showRegistrationDialog: false,      // флаг показа диалога выхода
+      showLoginDialog: false,      // флаг показа диалога выхода
+
+      regFormValid: true,   // форма регистрации валидна?
+      regFormFields: {    // поля формы регистрации
+        name: null,
+        email: null,
+        password: null,
+        repeatPassword: null,
+      },
     };
+  },
+
+  // правила валидации
+  validations: {
+    regFormFields: {
+      name: { required, minLength: minLength(3) },
+      email: { required, email },
+      password: { required, minLength: minLength(6) },
+      repeatPassword: { sameAsPassword: sameAs('password') },
+    },
   },
 
   computed: {
@@ -84,6 +210,7 @@ export default {
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
       selectedActionId: state => state.appMode.selectedActionId,
+      credentials: state => state.ds.credentials,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
@@ -113,6 +240,7 @@ export default {
     ...mapMutations({
       changeSelectedAction: 'appMode/changeSelectedAction',
       deleteErrorNotification: 'appMode/deleteErrorNotification',
+      logout: 'ds/logout',
     }),
 
     // выбрана акция в дереве
@@ -121,6 +249,26 @@ export default {
       this.$router.push({ name: this.selectedActionId });
       console.log(target);
     },
+
+    // валидация формы
+    isFormValid(validModel) {
+      validModel.$touch();
+      if (validModel.$error) {
+        return false;
+      }
+      return true;
+    },
+
+    // закрытие формы регистрации
+    closeRegForm(validModel) {
+      if (isFormValid(validModel)) {
+        this.regFormValid = true;
+        return;
+      }
+      this.regFormValid = false;
+
+    },
+
   },
 
   mounted() {

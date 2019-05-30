@@ -62,6 +62,7 @@ module.exports = function (ctx) {
         'QSpace',
         'QCheckbox',
         'QPopupEdit',
+        'QBtnDropdown',
       ],
 
       directives: [

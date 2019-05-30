@@ -16,6 +16,9 @@ export default {
   contentPartUrl: 'content',
   infoPartUrl: 'info',
 
+  regPartUrl: 'register',
+  loginPartUrl: 'login',
+
   // источники данных
   dsCustomers: [],        // Заказчики
   dsShortCustomers: [],   // Заказчики для QSelect
@@ -31,4 +34,11 @@ export default {
 
   // индикатор загрузки данных
   isLoading: false,
+
+  // учетные данные
+  credentials: [
+    {
+      id: null,
+    },
+  ],
 };

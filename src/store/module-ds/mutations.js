@@ -42,3 +42,6 @@ export const setLoading = (state, newValue) => {
 export const updateDsCustomers = (state, payload) => {
   payload.data[payload.column] = payload.newValue;
 };
+
+// выход из аккаунта
+export const logout = (state) => { state.credentials = []; };

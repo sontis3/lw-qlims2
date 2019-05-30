@@ -9,6 +9,9 @@ export const studiesUrl = state => `${state.apiUrl}/${state.catalogsPartUrl}/${s
 export const studyContentUrl = (state, getters) => studyId => `${getters.studiesUrl}/${studyId}/${state.contentPartUrl}`;
 export const studyContentInfoUrl = (state, getters) => studyId => `${getters.studyContentUrl(studyId)}/${state.infoPartUrl}`;
 
+export const regUrl = state => `${state.apiUrl}/${state.regPartUrl}`;
+export const loginUrl = state => `${state.apiUrl}/${state.loginPartUrl}`;
+
 // получить действующие страны
 export const getEnabledCountries = state => state.dsCountries.filter(el => el.enabled);
 
