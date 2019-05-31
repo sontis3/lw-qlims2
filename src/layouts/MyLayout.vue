@@ -8,7 +8,12 @@
         <q-toolbar-title>My App</q-toolbar-title>
         <!-- кнопки в незарегистрированном состоянии -->
         <q-btn-group v-if="credentials.length === 0">
-          <q-btn push @click="showRegistrationDialog=true" label="Зарегистрироваться" icon="person_add"/>
+          <q-btn
+            push
+            @click="showRegistrationDialog=true"
+            label="Зарегистрироваться"
+            icon="person_add"
+          />
           <q-btn push @click="showLoginDialog=true" label="Войти" icon="person"/>
         </q-btn-group>
         <!-- зарегистрирован -->
@@ -107,7 +112,7 @@
               label="Имя пользователя"
               :error="$v.regFormFields.name.$error"
             >
-              <template v-slot:error>Введите имя пользователя.</template>
+              <template v-slot:error>Введите имя пользователя длиной не менее 3-х сиволов.</template>
             </q-input>
           </div>
           <div class="row q-mb-md">
@@ -143,7 +148,12 @@
           </div>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Зарегистрироваться" @click="validateAndClose($v.regFormFields)" v-close-popup="regFormValid"/>
+          <q-btn
+            flat
+            label="Зарегистрироваться"
+            @click="closeRegForm($v.regFormFields)"
+            v-close-popup="regFormValid"
+          />
           <q-btn flat label="Отмена" v-close-popup/>
         </q-card-actions>
       </q-card>
@@ -166,7 +176,12 @@
 
 <script>
 import { openURL } from 'quasar';
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import {
+  mapState,
+  mapMutations,
+  mapGetters,
+  mapActions,
+} from 'vuex';
 import {
   required,
   minLength,
@@ -216,6 +231,7 @@ export default {
       currentActionsList: 'appMode/currentActionsList',
       currentAction: 'appMode/currentAction',
       actionsTreeData: 'appMode/getActionsTreeData',
+      getErrorDescription: 'appMode/getErrorDescription',
     }),
 
     // объект для настройки стиля елемента уведомления об ошибках
@@ -239,8 +255,13 @@ export default {
 
     ...mapMutations({
       changeSelectedAction: 'appMode/changeSelectedAction',
+      addErrorNotification: 'appMode/addErrorNotification',
       deleteErrorNotification: 'appMode/deleteErrorNotification',
       logout: 'ds/logout',
+    }),
+
+    ...mapActions({
+      userRegistration: 'ds/userRegistration',
     }),
 
     // выбрана акция в дереве
@@ -261,12 +282,32 @@ export default {
 
     // закрытие формы регистрации
     closeRegForm(validModel) {
-      if (isFormValid(validModel)) {
-        this.regFormValid = true;
+      if (!this.isFormValid(validModel)) {
+        this.regFormValid = false;
         return;
       }
-      this.regFormValid = false;
+      this.regFormValid = true;
 
+      const res = this.userRegistration(this.regFormFields);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Пользователь '${response.data.name}' зарегистрирован.`,
+          icon: 'save',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('post', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        });
     },
 
   },
