@@ -185,6 +185,8 @@ import {
 import {
   required,
   minLength,
+  maxLength,
+  // between,
   email,
   sameAs,
 } from 'vuelidate/lib/validators';
@@ -213,9 +215,9 @@ export default {
   // правила валидации
   validations: {
     regFormFields: {
-      name: { required, minLength: minLength(3) },
+      name: { required, minLength: minLength(3), maxLength: maxLength(24) },
       email: { required, email },
-      password: { required, minLength: minLength(6) },
+      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       repeatPassword: { sameAsPassword: sameAs('password') },
     },
   },
@@ -307,6 +309,15 @@ export default {
             message: errDescription,
             icon: 'report_problem',
           });
+        })
+        .finally(() => {
+          this.regFormFields = {    // поля формы регистрации
+            name: null,
+            email: null,
+            password: null,
+            repeatPassword: null,
+          };
+          this.regFormValid = true;
         });
     },
 

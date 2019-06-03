@@ -56,7 +56,7 @@
               />
             </template>
 
-            <template v-if="col.classes === 'as-select'" :props="props">
+            <template v-else-if="col.classes === 'as-select'" :props="props">
               <q-select
                 :value="props.row[col.rowFieldName]"
                 :options="getEnabledCountries"
