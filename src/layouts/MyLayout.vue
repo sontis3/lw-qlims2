@@ -7,18 +7,13 @@
         </q-btn>
         <q-toolbar-title>My App</q-toolbar-title>
         <!-- кнопки в незарегистрированном состоянии -->
-        <q-btn-group v-if="credentials.length === 0">
-          <q-btn
-            push
-            @click="showRegistrationDialog=true"
-            label="Зарегистрироваться"
-            icon="person_add"
-          />
+        <q-btn-group v-if="user === null">
+          <q-btn push @click="showRegistrationDialog=true" label="Зарегистрироваться" icon="person_add"/>
           <q-btn push @click="showLoginDialog=true" label="Войти" icon="person"/>
         </q-btn-group>
         <!-- зарегистрирован -->
         <q-btn-group v-else>
-          <q-btn-dropdown split label="Олег" icon="person">
+          <q-btn-dropdown split :label="user.name" icon="person">
             <q-list>
               <q-item clickable v-close-popup @click="showLogoutDialog=true">
                 <q-item-section>
@@ -165,8 +160,29 @@
         <q-card-section>
           <div class="text-h6">Войти</div>
         </q-card-section>
+        <q-card-section>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="loginFormFields.name"
+              autofocus
+              label="Имя пользователя"
+              :error="$v.loginFormFields.name.$error"
+            >
+              <template v-slot:error>Введите имя пользователя длиной не менее 3-х сиволов.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-input
+              v-model="loginFormFields.password"
+              label="Пароль"
+              :error="$v.loginFormFields.password.$error"
+            >
+              <template v-slot:error>Длина пароля должна быть не менее 6 символов.</template>
+            </q-input>
+          </div>
+        </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Войти" v-close-popup/>
+          <q-btn flat label="Войти" @click="closeLoginForm($v.loginFormFields)" v-close-popup="loginFormValid"/>
           <q-btn flat label="Отмена" v-close-popup/>
         </q-card-actions>
       </q-card>
@@ -209,6 +225,11 @@ export default {
         password: null,
         repeatPassword: null,
       },
+      loginFormValid: true,   // форма логина валидна?
+      loginFormFields: {    // поля формы логина
+        name: null,
+        password: null,
+      },
     };
   },
 
@@ -220,6 +241,10 @@ export default {
       password: { required, minLength: minLength(6), maxLength: maxLength(16) },
       repeatPassword: { sameAsPassword: sameAs('password') },
     },
+    loginFormFields: {
+      name: { required, minLength: minLength(3), maxLength: maxLength(24) },
+      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
+    },
   },
 
   computed: {
@@ -227,6 +252,7 @@ export default {
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
       selectedActionId: state => state.appMode.selectedActionId,
+      user: state => state.ds.user,
       credentials: state => state.ds.credentials,
     }),
     ...mapGetters({
@@ -264,6 +290,7 @@ export default {
 
     ...mapActions({
       userRegistration: 'ds/userRegistration',
+      userLogin: 'ds/userLogin',
     }),
 
     // выбрана акция в дереве
@@ -321,6 +348,42 @@ export default {
         });
     },
 
+    // закрытие формы логина
+    closeLoginForm(validModel) {
+      if (!this.isFormValid(validModel)) {
+        this.loginFormValid = false;
+        return;
+      }
+      this.loginFormValid = true;
+
+      const res = this.userLogin(this.loginFormFields);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Пользователь '${response.data.name}' выполнил вход в систему.`,
+          icon: 'save',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('post', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.loginFormFields = {    // поля формы регистрации
+            name: null,
+            password: null,
+          };
+          this.loginFormValid = true;
+        });
+    },
   },
 
   mounted() {

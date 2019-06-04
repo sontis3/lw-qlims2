@@ -35,7 +35,10 @@ export default {
   // индикатор загрузки данных
   isLoading: false,
 
-  // учетные данные
+  // данные пользователя
+  user: null,
+
+  // удостоверения
   credentials: [
     {
       id: null,
