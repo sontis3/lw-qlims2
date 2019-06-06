@@ -2,7 +2,13 @@ import axios from 'axios';
 
 // получить полный источник данных
 export const getCountries = async ({ commit, getters }) => {
-  const response = await axios.get(getters.countriesUrl).then((resp) => { commit('setDsCountries', resp.data); return resp; });
+  const response = await axios.get(getters.countriesUrl)
+    .then((resp) => { commit('setDsCountries', resp.data); return resp; })
+    .catch((err) => {
+      // очистка ds и проброс ошибки
+      commit('setDsCountries', []);
+      throw err;
+    });
   return response;
 };
 

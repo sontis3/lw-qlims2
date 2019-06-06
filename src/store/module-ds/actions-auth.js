@@ -23,6 +23,10 @@ export const userLogin = async ({ commit, getters }, obj) => {
     password: obj.password,
   };
 
-  const response = await axios.post(url, postData).then((resp) => { commit('setUser', resp.data); return resp; });
+  const response = await axios.post(url, postData).then((resp) => {
+    commit('setUser', resp.data);
+    axios.defaults.headers.common.Authorization = resp.data.access_token;
+    return resp;
+  });
   return response;
 };

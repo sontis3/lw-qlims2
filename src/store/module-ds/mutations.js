@@ -46,5 +46,10 @@ export const updateDsCustomers = (state, payload) => {
 // установка аккаунта
 export const setUser = (state, userData) => { state.user = userData; };
 
+
+import axios from 'axios';
 // выход из аккаунта
-export const logout = (state) => { state.user = null; };
+export const logout = (state) => {
+  state.user = null;
+  axios.defaults.headers.common.Authorization = '';
+};

@@ -39,9 +39,9 @@ export default {
   user: null,
 
   // удостоверения
-  credentials: [
-    {
-      id: null,
-    },
-  ],
+  // credentials: [
+  //   {
+  //     id: null,
+  //   },
+  // ],
 };

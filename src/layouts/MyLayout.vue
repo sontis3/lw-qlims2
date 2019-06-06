@@ -253,7 +253,6 @@ export default {
       errorNotifications: state => state.appMode.errorNotifications,
       selectedActionId: state => state.appMode.selectedActionId,
       user: state => state.ds.user,
-      credentials: state => state.ds.credentials,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',

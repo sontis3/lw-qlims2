@@ -2,7 +2,13 @@ import axios from 'axios';
 
 // получить полный источник данных
 export const getCustomers = async ({ commit, getters }) => {
-  const response = await axios.get(getters.customersUrl).then((resp) => { commit('setDsCustomers', resp.data); return resp; });
+  const response = await axios.get(getters.customersUrl)
+    .then((resp) => { commit('setDsCustomers', resp.data); return resp; })
+    .catch((err) => {
+      // очистка ds и проброс ошибки
+      commit('setDsCustomers', []);
+      throw err;
+    });
   return response;
 };
 

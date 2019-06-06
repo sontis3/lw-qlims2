@@ -355,7 +355,21 @@ export default {
 
   mounted() {
     if (this.dsCountries.length === 0) {
-      this.getCountries();
+      this.setLoading(true);
+      this.getCountries().then()
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('get', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
     }
   },
 };
