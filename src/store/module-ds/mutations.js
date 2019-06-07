@@ -44,7 +44,7 @@ export const updateDsCustomers = (state, payload) => {
 };
 
 // установка данных пользователя
-export const setUser = (state, userData) => { state.userData = userData; };
+export const setUserData = (state, userData) => { state.userData = userData; };
 
 
 import axios from 'axios';
@@ -52,4 +52,13 @@ import axios from 'axios';
 export const logout = (state) => {
   state.userData = null;
   axios.defaults.headers.common.Authorization = '';
+};
+
+// установка конфигурации авторизации
+export const setAbility = (state, obj) => {
+  state.ability = obj;
+};
+
+export const updateAbility = (state, obj) => {
+  state.ability.update(obj);
 };

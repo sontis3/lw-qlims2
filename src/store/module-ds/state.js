@@ -38,6 +38,9 @@ export default {
   // данные пользователя
   userData: null,
 
+  // объект управления авторизацией
+  ability: null, // new Ability(),
+
   // удостоверения
   // credentials: [
   //   {

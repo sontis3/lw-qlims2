@@ -24,8 +24,10 @@ export const userLogin = async ({ commit, getters }, obj) => {
   };
 
   const response = await axios.post(url, postData).then((resp) => {
-    commit('setUser', resp.data);
+    commit('setUserData', resp.data);
     axios.defaults.headers.common.Authorization = resp.data.access_token;
+    commit('updateAbility', resp.data.rules);
+
     return resp;
   });
   return response;

@@ -333,6 +333,7 @@ export default {
       ds: state => state.ds.dsCustomers,        // источник данных
       dsCountries: state => state.ds.dsCountries,        // источник данных Страны
       isLoading: state => state.ds.isLoading,
+      abilityDS: state => state.ds.ability,
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',

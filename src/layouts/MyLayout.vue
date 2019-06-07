@@ -206,6 +206,7 @@ import {
   email,
   sameAs,
 } from 'vuelidate/lib/validators';
+import { Ability } from '@casl/ability';
 
 export default {
   name: 'MyLayout',
@@ -253,6 +254,7 @@ export default {
       errorNotifications: state => state.appMode.errorNotifications,
       selectedActionId: state => state.appMode.selectedActionId,
       userData: state => state.ds.userData,
+      abilityDS: state => state.ds.ability,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
@@ -285,6 +287,7 @@ export default {
       addErrorNotification: 'appMode/addErrorNotification',
       deleteErrorNotification: 'appMode/deleteErrorNotification',
       logout: 'ds/logout',
+      setAbility: 'ds/setAbility',
     }),
 
     ...mapActions({
@@ -386,6 +389,8 @@ export default {
   },
 
   mounted() {
+    const ab = new Ability();
+    this.setAbility(ab);
     this.selectedNode = this.selectedActionId;
     // this.$refs.actionsTree.setExpanded(this.selectedNode, 'true');
     this.$router.push({ name: this.selectedActionId });

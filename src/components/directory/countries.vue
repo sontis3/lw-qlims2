@@ -74,7 +74,7 @@
 
           <q-td key="rowActions" :props="props">
             <!-- <q-btn round size="xs" icon="edit" @click="onEditDocument(props.row)"/> -->
-            <q-btn round size="xs" icon="delete">
+            <q-btn v-if="abilityDS.can('delete', 'Country')" round size="xs" icon="delete">
               <q-menu
                 anchor="bottom left"
                 self="top left"
@@ -239,6 +239,7 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.ds.isLoading,
+      abilityDS: state => state.ds.ability,
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
