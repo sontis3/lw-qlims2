@@ -43,13 +43,13 @@ export const updateDsCustomers = (state, payload) => {
   payload.data[payload.column] = payload.newValue;
 };
 
-// установка аккаунта
-export const setUser = (state, userData) => { state.user = userData; };
+// установка данных пользователя
+export const setUser = (state, userData) => { state.userData = userData; };
 
 
 import axios from 'axios';
 // выход из аккаунта
 export const logout = (state) => {
-  state.user = null;
+  state.userData = null;
   axios.defaults.headers.common.Authorization = '';
 };

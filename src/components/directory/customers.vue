@@ -81,6 +81,9 @@
                 <q-input v-model="popupEditData" dense counter autofocus/>
               </q-popup-edit>
             </template>
+
+            <template v-else-if="col.name === 'rowActions'" :props="props">
+            </template>
             <template v-else>{{ col.value }}</template>
           </q-td>
         </q-tr>
@@ -299,10 +302,11 @@ export default {
           align: 'right',
           field: 'rowActions',
           required: true,
+          style: 'width: 80px',
         },
       ],
       visibleColumns: ['desc', 'enabled', 'country', 'zip_code', 'city', 'region', 'address_line_1', 'address_line_2', 'address_line_3',
-        'email', 'phone_1', 'createdAt', 'updatedAt', 'row-actions'],
+        'email', 'phone_1', 'createdAt', 'updatedAt', 'rowActions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name: null,

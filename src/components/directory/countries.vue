@@ -220,7 +220,7 @@ export default {
         },
 
       ],
-      visibleColumns: ['desc_ru', 'desc_en', 'enabled', 'row-actions'],
+      visibleColumns: ['desc_ru', 'desc_en', 'enabled', 'rowActions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name_ru: null,

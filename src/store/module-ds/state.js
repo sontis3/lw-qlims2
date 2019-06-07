@@ -36,7 +36,7 @@ export default {
   isLoading: false,
 
   // данные пользователя
-  user: null,
+  userData: null,
 
   // удостоверения
   // credentials: [

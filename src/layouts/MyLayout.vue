@@ -7,13 +7,13 @@
         </q-btn>
         <q-toolbar-title>My App</q-toolbar-title>
         <!-- кнопки в незарегистрированном состоянии -->
-        <q-btn-group v-if="user === null">
+        <q-btn-group v-if="userData === null">
           <q-btn push @click="showRegistrationDialog=true" label="Зарегистрироваться" icon="person_add"/>
           <q-btn push @click="showLoginDialog=true" label="Войти" icon="person"/>
         </q-btn-group>
         <!-- зарегистрирован -->
         <q-btn-group v-else>
-          <q-btn-dropdown split :label="user.name" icon="person">
+          <q-btn-dropdown split :label="userData.name" icon="person">
             <q-list>
               <q-item clickable v-close-popup @click="showLogoutDialog=true">
                 <q-item-section>
@@ -252,7 +252,7 @@ export default {
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
       selectedActionId: state => state.appMode.selectedActionId,
-      user: state => state.ds.user,
+      userData: state => state.ds.userData,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
