@@ -1,3 +1,9 @@
+// Администрирование
+export const setDsSystemObjects = (state, newDs) => {
+  state.dsSystemObjects = newDs;
+};
+
+// Справочники
 // установить новый источник данных Заказчики
 export const setDsCustomers = (state, newDs) => {
   state.dsCustomers = newDs;
@@ -39,9 +45,9 @@ export const setLoading = (state, newValue) => {
 };
 
 // изменить источник данных Заказчики
-export const updateDsCustomers = (state, payload) => {
-  payload.data[payload.column] = payload.newValue;
-};
+// export const updateDsCustomers = (state, payload) => {
+//   payload.data[payload.column] = payload.newValue;
+// };
 
 // установка данных пользователя
 export const setUserData = (state, userData) => { state.userData = userData; };

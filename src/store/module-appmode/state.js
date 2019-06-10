@@ -5,6 +5,17 @@ export default {
   // данные для шаблона дерева акций
   treeActionsTemplate: [
     {
+      id: 'Administration',
+      label: 'Администрирование',
+      selectable: false,
+      children: [
+        { id: 'SystemObjects', label: 'Системные объекты' },
+        { id: 'SystemObjectActions', label: 'Действия над объектами' },
+        { id: 'Roles', label: 'Роли' },
+        { id: 'Users', label: 'Пользователи' },
+      ],
+    },
+    {
       id: 'Directory',
       label: 'Справочники',
       selectable: false,

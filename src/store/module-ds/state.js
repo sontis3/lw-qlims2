@@ -6,7 +6,13 @@ export default {
   // адреса web API
   apiUrl: 'http://localhost:3000/api',
   dirPartUrl: 'dir',
+  adminPartUrl: 'admin',
   catalogsPartUrl: 'catalogs',
+
+  // администрирование
+  systemObjectsPartUrl: 'system-objects',
+
+  // справочники
   customersPartUrl: 'customers',
   countriesPartUrl: 'countries',
 
@@ -20,14 +26,18 @@ export default {
   loginPartUrl: 'login',
 
   // источники данных
+  // Администрирование
+  dsSystemObjects: [],        // Системные объекты
+
+  // Справочники
   dsCustomers: [],        // Заказчики
   dsShortCustomers: [],   // Заказчики для QSelect
   dsCountries: [],        // Страны
 
-  dsTestObjects: [],      // Тестируемые объекты
-  dsShortTestObjects: [], // Тестируемые объекты для QSelect
-  dsDeliveryMethods: [],  // Методы доставки
-  dsMasterSchedules: {},  // План-график исследований (именем свойства является номер года)
+  // dsTestObjects: [],      // Тестируемые объекты
+  // dsShortTestObjects: [], // Тестируемые объекты для QSelect
+  // dsDeliveryMethods: [],  // Методы доставки
+  // dsMasterSchedules: {},  // План-график исследований (именем свойства является номер года)
 
   // годы
   dsYears: range(2016, (new Date()).getFullYear() + 1),

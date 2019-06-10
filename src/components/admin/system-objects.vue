@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-table
-      title="Заказчики"
+      title="Системные объекты"
       :columns="columns"
       :visibleColumns="visibleColumns"
       :data="ds"
@@ -56,7 +56,7 @@
               />
             </template>
 
-            <template v-else-if="col.classes === 'as-select'" :props="props">
+            <!-- <template v-else-if="col.classes === 'as-select'" :props="props">
               <q-select
                 :value="props.row[col.rowFieldName]"
                 :options="getEnabledCountries"
@@ -68,7 +68,7 @@
                 dense
                 options-dense
               />
-            </template>
+            </template> -->
 
             <template v-else-if="col.classes === 'popup-edit'" :props="props">
               {{ col.value }}
@@ -125,7 +125,7 @@
     <q-dialog v-model="showDialog" no-backdrop-dismiss>
       <q-card>
         <q-card-section>
-          <div class="text-h6">Добавление нового заказчика</div>
+          <div class="text-h6">Добавление нового Системного объекта</div>
         </q-card-section>
         <q-card-section>
           <div class="row q-mb-md">
@@ -135,57 +135,17 @@
               label="Наименование"
               :error="$v.addFormFields.name.$error"
             >
-              <template v-slot:error>Введите заказчика.</template>
+              <template v-slot:error>Введите имя системного объекта.</template>
             </q-input>
           </div>
           <div class="row q-mb-md">
             <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
           </div>
-          <div class="row q-mb-md">
-            <q-select
-              v-model="addFormFields.country"
-              :options="getEnabledCountries"
-              option-value="id"
-              option-label="name_ru"
-              label="Страна"
-              style="width: 120px"
-              filled
-              dense
-              options-dense
-            ></q-select>
-          </div>
-          <div class="row q-mb-md">
-            <q-input
-              v-model="addFormFields.email"
-              :error="$v.addFormFields.email.$error"
-              label="Почта"
-              bottom-slots
-            >
-              <template v-slot:before>
-                <q-icon name="mail"/>
-              </template>
-              <template v-slot:error>Ошибка формата адреса эл. почты.</template>
-            </q-input>
-          </div>
-          <div class="row q-mb-md">
-            <q-input
-              v-model="addFormFields.phone_1"
-              :error="$v.addFormFields.phone_1.$error"
-              label="Телефон 1"
-              type="tel"
-              bottom-slots
-            >
-              <template v-slot:before>
-                <q-icon name="phone"/>
-              </template>
-              <template v-slot:error>Ошибка формата номера телефона.</template>
-            </q-input>
-          </div>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup/>
           <q-btn flat label="Add" @click="validateAndClose('name')" v-close-popup="addFormValid"/>
+          <q-btn flat label="Cancel" v-close-popup/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -199,12 +159,7 @@ import {
   mapMutations,
   mapActions,
 } from 'vuex';
-import {
-  required,
-  minLength,
-  email,
-  // sameAs
-} from 'vuelidate/lib/validators';
+import { required, minLength } from 'vuelidate/lib/validators';
 import { PageContainer } from '../mixins/page-container';
 
 export default {
@@ -230,102 +185,7 @@ export default {
           sortable: true,
           sort: (a, b) => a - b,
           classes: 'as-checkbox',
-        },
-        {
-          name: 'country',
-          required: true,
-          label: 'Страна',
-          align: 'left',
-          field: row => row.country.name_ru,
-          rowFieldName: 'country',    // для ссылочных полей указывает на имя поля в строке
-          sortable: true,
-          classes: 'as-select',
-        },
-        {
-          name: 'zip_code',
-          required: true,
-          label: 'Почтовый индекс',
-          align: 'left',
-          field: 'zip_code',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'city',
-          required: true,
-          label: 'Город',
-          align: 'left',
-          field: 'city',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'region',
-          required: true,
-          label: 'Регион',
-          align: 'left',
-          field: 'region',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'address_line_1',
-          required: true,
-          label: 'Адрес 1',
-          align: 'left',
-          field: 'address_line_1',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'address_line_2',
-          required: true,
-          label: 'Адрес 2',
-          align: 'left',
-          field: 'address_line_2',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'address_line_3',
-          required: true,
-          label: 'Адрес 3',
-          align: 'left',
-          field: 'address_line_3',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'email',
-          required: true,
-          label: 'Почта',
-          align: 'left',
-          field: 'email',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'phone_1',
-          required: true,
-          label: 'Телефон1',
-          align: 'left',
-          field: 'phone_1',
-          sortable: true,
-          classes: 'popup-edit',
-        },
-        {
-          name: 'createdAt',
-          label: 'Дата создания',
-          align: 'center',
-          field: 'createdAt',
-          sortable: true,
-        },
-        {
-          name: 'updatedAt',
-          label: 'Дата изменения',
-          align: 'center',
-          field: 'updatedAt',
-          sortable: true,
+          style: 'width: 80px',
         },
         {
           name: 'rowActions',
@@ -336,15 +196,11 @@ export default {
           style: 'width: 80px',
         },
       ],
-      visibleColumns: ['desc', 'enabled', 'country', 'zip_code', 'city', 'region', 'address_line_1', 'address_line_2', 'address_line_3',
-        'email', 'phone_1', 'createdAt', 'updatedAt', 'rowActions'],
+      visibleColumns: ['desc', 'enabled', 'rowActions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name: null,
         enabled: true,
-        country: null,
-        email: '123@456.com',
-        phone_1: '89161234567',
       },
       selectData: {},       // буфер для селекта в ячейке таблицы
     };
@@ -353,22 +209,20 @@ export default {
   // правила валидации
   validations: {
     addFormFields: {
-      name: { required, minLength: minLength(2) },
-      email: { required, email },
-      phone_1: { required },
+      name: { required, minLength: minLength(3) },
     },
   },
 
   computed: {
     ...mapState({
-      ds: state => state.ds.dsCustomers,        // источник данных
-      dsCountries: state => state.ds.dsCountries,        // источник данных Страны
+      ds: state => state.ds.dsSystemObjects,        // источник данных
+      // dsCountries: state => state.ds.dsCountries,        // источник данных Страны
       isLoading: state => state.ds.isLoading,
       abilityDS: state => state.ds.ability,
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
-      getEnabledCountries: 'ds/getEnabledCountries',
+      // getEnabledCountries: 'ds/getEnabledCountries',
     }),
   },
 
@@ -376,7 +230,6 @@ export default {
     ...mapMutations({
       addErrorNotification: 'appMode/addErrorNotification',
       setLoading: 'ds/setLoading',
-      // updateDsCustomers: 'ds/updateDsCustomers',
     }),
 
     ...mapActions({
@@ -384,30 +237,30 @@ export default {
       addDocument: 'ds/addCustomer',
       deleteDocument: 'ds/deleteCustomer',
       updateDocument: 'ds/updateCustomer',
-      getCountries: 'ds/getCountries',
+      // getCountries: 'ds/getCountries',
     }),
 
   },
 
-  mounted() {
-    if (this.dsCountries.length === 0) {
-      this.setLoading(true);
-      this.getCountries().then()
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('get', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
-        });
-    }
-  },
+  // mounted() {
+  //   if (this.dsCountries.length === 0) {
+  //     this.setLoading(true);
+  //     this.getCountries().then()
+  //       .catch((err) => {
+  //         const errDescription = this.getErrorDescription('get', err);
+  //         this.addErrorNotification({ message: err.message, description: errDescription });
+  //         this.$q.notify({
+  //           color: 'negative',
+  //           position: 'top',
+  //           message: errDescription,
+  //           icon: 'report_problem',
+  //         });
+  //       })
+  //       .finally(() => {
+  //         this.setLoading(false);
+  //       });
+  //   }
+  // },
 };
 </script>
 

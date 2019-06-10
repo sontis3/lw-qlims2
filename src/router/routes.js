@@ -5,6 +5,8 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       { path: '', name: 'Index', component: () => import('pages/Index.vue') },
+      { path: 'admin/system-objects', name: 'SystemObjects', component: () => import('components/admin/system-objects') },
+
       { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
       { path: 'directory/countries', name: 'Countries', component: () => import('components/directory/countries') },
       // { path: 'directory/test-objects', name: 'TestObjects', component: () => import('components/directory/test-objects') },
