@@ -100,7 +100,7 @@
                     color="red-4"
                     text-color="white"
                     label="Удалить"
-                    @click="onDeleteDocument(props.row)"
+                    @click="onDeleteDocument(props.row, 'name_ru')"
                   />
                 </div>
               </q-menu>
@@ -227,12 +227,6 @@ export default {
         name_en: null,
         enabled: true,
       },
-      popoverStyle: {
-        backgroundColor: 'red',
-        minWidth: '0px',
-        display: 'inline-flex',
-        flexWrap: 'nowrap',
-      },
     };
   },
 
@@ -268,38 +262,6 @@ export default {
       updateDocument: 'ds/updateCountry',
     }),
 
-    // удалить документ
-    onDeleteDocument(row) {
-      const { id } = row;
-      this.setLoading(true);
-      const res = this.deleteDocument(id);
-      res.then((response) => {
-        this.$q.notify({
-          color: 'positive',
-          position: 'top',
-          message: `Документ '${response.data.name_ru}' успешно удален.`,
-          icon: 'delete',
-        });
-      })
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('delete', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
-        });
-    },
-
-    showPopover() {
-      // выставить ширину как у строки таблицы
-      this.popoverStyle.minWidth = `${this.$el.querySelector('.q-table tbody tr').clientWidth}px`;
-    },
   },
 
 };

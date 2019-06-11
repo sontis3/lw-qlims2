@@ -56,20 +56,6 @@
               />
             </template>
 
-            <!-- <template v-else-if="col.classes === 'as-select'" :props="props">
-              <q-select
-                :value="props.row[col.rowFieldName]"
-                :options="getEnabledCountries"
-                @input="(val) => onUpdateDocument(val, props.row, col.rowFieldName, 'name')"
-                option-value="id"
-                option-label="name_ru"
-                style="width: 120px"
-                filled
-                dense
-                options-dense
-              />
-            </template> -->
-
             <template v-else-if="col.classes === 'popup-edit'" :props="props">
               {{ col.value }}
               <q-popup-edit
@@ -109,7 +95,7 @@
                       color="red-4"
                       text-color="white"
                       label="Удалить"
-                      @click="onDeleteDocument(props.row)"
+                      @click="onDeleteDocument(props.row, 'name')"
                     />
                   </div>
                 </q-menu>
@@ -216,13 +202,11 @@ export default {
   computed: {
     ...mapState({
       ds: state => state.ds.dsSystemObjects,        // источник данных
-      // dsCountries: state => state.ds.dsCountries,        // источник данных Страны
       isLoading: state => state.ds.isLoading,
-      abilityDS: state => state.ds.ability,
+      // abilityDS: state => state.ds.ability,
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
-      // getEnabledCountries: 'ds/getEnabledCountries',
     }),
   },
 
@@ -233,34 +217,13 @@ export default {
     }),
 
     ...mapActions({
-      getDocuments: 'ds/getCustomers',
-      addDocument: 'ds/addCustomer',
-      deleteDocument: 'ds/deleteCustomer',
-      updateDocument: 'ds/updateCustomer',
-      // getCountries: 'ds/getCountries',
+      getDocuments: 'ds/getSystemObjects',
+      addDocument: 'ds/addSystemObject',
+      deleteDocument: 'ds/deleteSystemObject',
+      updateDocument: 'ds/updateSystemObject',
     }),
 
   },
-
-  // mounted() {
-  //   if (this.dsCountries.length === 0) {
-  //     this.setLoading(true);
-  //     this.getCountries().then()
-  //       .catch((err) => {
-  //         const errDescription = this.getErrorDescription('get', err);
-  //         this.addErrorNotification({ message: err.message, description: errDescription });
-  //         this.$q.notify({
-  //           color: 'negative',
-  //           position: 'top',
-  //           message: errDescription,
-  //           icon: 'report_problem',
-  //         });
-  //       })
-  //       .finally(() => {
-  //         this.setLoading(false);
-  //       });
-  //   }
-  // },
 };
 </script>
 

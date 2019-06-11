@@ -109,7 +109,7 @@
                       color="red-4"
                       text-color="white"
                       label="Удалить"
-                      @click="onDeleteDocument(props.row)"
+                      @click="onDeleteDocument(props.row, 'name')"
                     />
                   </div>
                 </q-menu>
