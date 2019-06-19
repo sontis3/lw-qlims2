@@ -1,12 +1,18 @@
 import axios from 'axios';
 
+// помощник для уменьшения редактирования кода
+const getUrl = getters => getters.systemObjectsUrl;
+const setDsMutation = 'setDsSystemObjects';
+const getAction = 'getSystemObjects';
+
 // получить полный источник данных
 export const getSystemObjects = async ({ commit, getters }) => {
-  const response = await axios.get(getters.systemObjectsUrl)
-    .then((resp) => { commit('setDsSystemObjects', resp.data); return resp; })
+  const url = getUrl(getters);
+  const response = await axios.get(url)
+    .then((resp) => { commit(setDsMutation, resp.data); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки
-      commit('setDsSystemObjects', []);
+      commit(setDsMutation, []);
       throw err;
     });
   return response;
@@ -14,7 +20,7 @@ export const getSystemObjects = async ({ commit, getters }) => {
 
 // добавить документ
 export const addSystemObject = async ({ getters, dispatch }, obj) => {
-  const url = getters.systemObjectsUrl;
+  const url = getUrl(getters);
 
   const postData = {
     name: obj.name,
@@ -22,22 +28,22 @@ export const addSystemObject = async ({ getters, dispatch }, obj) => {
   };
 
   const response = await axios.post(url, postData);
-  await dispatch('getSystemObjects');
+  await dispatch(getAction);
   return response;
 };
 
 // удалить документ
 export const deleteSystemObject = async ({ getters, dispatch }, id) => {
-  const url = `${getters.systemObjectsUrl}/${id}`;
+  const url = `${getUrl(getters)}/${id}`;
 
   const response = await axios.delete(url);
-  await dispatch('getSystemObjects');
+  await dispatch(getAction);
   return response;
 };
 
 // изменить документ
 export const updateSystemObject = async ({ getters }, obj) => {
-  const url = `${getters.systemObjectsUrl}/${obj.id}`;
+  const url = `${getUrl(getters)}/${obj.id}`;
 
   const putData = {
     name: obj.name,
@@ -48,15 +54,3 @@ export const updateSystemObject = async ({ getters }, obj) => {
   const response = await axios.put(url, putData, { headers: header });
   return response;
 };
-
-// добавочные специализированные акции
-// // получить источник данных (имя, ид объекта)
-// export const getShortEnabledCustomers = async ({ commit, getters }) => {
-//   const resp = await axios.get(getters.customersUrl, { params: { enabled: true, short: true } })
-//     .then((rawResponse) => {
-//       const response = rawResponse.data.map(item => ({ label: item.name, value: item.id }));
-//       commit('setDsShortCustomers', response);
-//       return response;
-//     });
-//   return resp;
-// };

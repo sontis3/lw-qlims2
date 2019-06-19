@@ -1,12 +1,18 @@
 import axios from 'axios';
 
+// помощник для уменьшения редактирования кода
+const getUrl = getters => getters.countriesUrl;
+const setDsMutation = 'setDsCountries';
+const getAction = 'getCountries';
+
 // получить полный источник данных
 export const getCountries = async ({ commit, getters }) => {
-  const response = await axios.get(getters.countriesUrl)
-    .then((resp) => { commit('setDsCountries', resp.data); return resp; })
+  const url = getUrl(getters);
+  const response = await axios.get(url)
+    .then((resp) => { commit(setDsMutation, resp.data); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки
-      commit('setDsCountries', []);
+      commit(setDsMutation, []);
       throw err;
     });
   return response;
@@ -14,25 +20,25 @@ export const getCountries = async ({ commit, getters }) => {
 
 // добавить документ
 export const addCountry = async ({ getters, dispatch }, obj) => {
-  const url = getters.countriesUrl;
+  const url = getUrl(getters);
 
   const response = await axios.post(url, obj);
-  await dispatch('getCountries');
+  await dispatch(getAction);
   return response;
 };
 
 // удалить документ
 export const deleteCountry = async ({ getters, dispatch }, id) => {
-  const url = `${getters.countriesUrl}/${id}`;
+  const url = `${getUrl(getters)}/${id}`;
 
   const response = await axios.delete(url);
-  await dispatch('getCountries');
+  await dispatch(getAction);
   return response;
 };
 
 // изменить документ
 export const updateCountry = async ({ getters }, obj) => {
-  const url = `${getters.countriesUrl}/${obj.id}`;
+  const url = `${getUrl(getters)}/${obj.id}`;
 
   const putData = {
     name_ru: obj.name_ru,

@@ -1,6 +1,7 @@
 // получить адреса сервисов web API
 // адреса админки
 export const systemObjectsUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.systemObjectsPartUrl}`;
+export const systemObjectActionsUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.systemObjectActionsPartUrl}`;
 
 // адреса справочников
 export const customersUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.customersPartUrl}`;

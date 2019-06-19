@@ -3,6 +3,10 @@ export const setDsSystemObjects = (state, newDs) => {
   state.dsSystemObjects = newDs;
 };
 
+export const setDsSystemObjectsActions = (state, newDs) => {
+  state.dsSystemObjectsActions = newDs;
+};
+
 // Справочники
 // установить новый источник данных Заказчики
 export const setDsCustomers = (state, newDs) => {

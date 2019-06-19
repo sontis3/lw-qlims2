@@ -11,6 +11,7 @@ export default {
 
   // администрирование
   systemObjectsPartUrl: 'system-objects',
+  systemObjectActionsPartUrl: 'system-objects-actions',
 
   // справочники
   customersPartUrl: 'customers',
@@ -28,6 +29,7 @@ export default {
   // источники данных
   // Администрирование
   dsSystemObjects: [],        // Системные объекты
+  dsSystemObjectsActions: [], // Действия над Системными объектами
 
   // Справочники
   dsCustomers: [],        // Заказчики

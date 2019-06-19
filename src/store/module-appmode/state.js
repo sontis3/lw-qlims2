@@ -10,7 +10,7 @@ export default {
       selectable: false,
       children: [
         { id: 'SystemObjects', label: 'Системные объекты' },
-        { id: 'SystemObjectActions', label: 'Действия над объектами' },
+        { id: 'SystemObjectsActions', label: 'Действия над объектами' },
         { id: 'Roles', label: 'Роли' },
         { id: 'Users', label: 'Пользователи' },
       ],
