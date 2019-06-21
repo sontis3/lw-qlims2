@@ -63,6 +63,9 @@ module.exports = function (ctx) {
         'QCheckbox',
         'QPopupEdit',
         'QBtnDropdown',
+        'QSeparator',
+        'QTabPanel',
+        'QScrollArea',
       ],
 
       directives: [

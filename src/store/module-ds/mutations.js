@@ -1,10 +1,17 @@
 // Администрирование
+// Системные объекты
 export const setDsSystemObjects = (state, newDs) => {
   state.dsSystemObjects = newDs;
 };
 
+// Действия над Системными Объектами
 export const setDsSystemObjectsActions = (state, newDs) => {
   state.dsSystemObjectsActions = newDs;
+};
+
+// Роли
+export const setDsRoles = (state, newDs) => {
+  state.dsRoles = newDs;
 };
 
 // Справочники

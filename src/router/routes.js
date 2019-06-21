@@ -8,6 +8,7 @@ const routes = [
       { path: '', name: 'Index', component: () => import('pages/Index.vue') },
       { path: 'admin/system-objects', name: 'SystemObjects', component: () => import('components/admin/system-objects') },
       { path: 'admin/system-objects-actions', name: 'SystemObjectsActions', component: () => import('components/admin/system-objects-actions') },
+      { path: 'admin/roles', name: 'Roles', component: () => import('components/admin/roles') },
 
       { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
       { path: 'directory/countries', name: 'Countries', component: () => import('components/directory/countries') },

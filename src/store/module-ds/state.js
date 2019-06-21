@@ -12,6 +12,7 @@ export default {
   // администрирование
   systemObjectsPartUrl: 'system-objects',
   systemObjectActionsPartUrl: 'system-objects-actions',
+  rolesPartUrl: 'roles',
 
   // справочники
   customersPartUrl: 'customers',
@@ -30,6 +31,7 @@ export default {
   // Администрирование
   dsSystemObjects: [],        // Системные объекты
   dsSystemObjectsActions: [], // Действия над Системными объектами
+  dsRoles: [],                // Роли
 
   // Справочники
   dsCustomers: [],        // Заказчики
