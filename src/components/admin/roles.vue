@@ -43,7 +43,7 @@
             </q-item-section>
             <!-- кнопка удалить Роль -->
             <q-item-section side>
-              <q-btn class="text-grey-8 q-gutter-x-xs" flat dense round size="sm" icon="delete" @click.stop="">
+              <q-btn class="text-grey-8 q-gutter-x-xs" flat dense round size="sm" icon="delete" @click.stop="changeActiveRole(index)">
                 <q-menu
                   anchor="bottom left"
                   self="top left"
@@ -68,7 +68,7 @@
                       color="red-4"
                       text-color="white"
                       label="Удалить"
-                      @click="onDeleteDocument(item, 'name', deleteRole)"
+                      @click="onDeleteRole(item)"
                     />
                   </div>
                 </q-menu>
@@ -104,7 +104,7 @@ export default {
   data() {
     return {
       roleData: '',
-      link: 'inbox',
+      link: 0,
     };
   },
 
@@ -155,6 +155,17 @@ export default {
             icon: 'report_problem',
           });
         });
+    },
+
+    // смена текущей роли
+    changeActiveRole(index) {
+      this.link = index;
+    },
+
+    // смена текущей роли
+    onDeleteRole(row) {
+      this.link = 0;
+      this.onDeleteDocument(row, 'name', this.deleteRole);
     },
 
   },
