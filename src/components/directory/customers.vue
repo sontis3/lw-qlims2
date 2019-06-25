@@ -109,7 +109,7 @@
                       color="red-4"
                       text-color="white"
                       label="Удалить"
-                      @click="onDeleteDocument(props.row, 'name')"
+                      @click="onDeleteDocument(props.row, 'name', deleteDocument)"
                     />
                   </div>
                 </q-menu>
@@ -206,10 +206,11 @@ import {
   // sameAs
 } from 'vuelidate/lib/validators';
 import { PageContainer } from '../mixins/page-container';
+import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
   // name: 'ComponentName',
-  mixins: [PageContainer],
+  mixins: [PageContainer, DeletePopover],
   data() {
     return {
       columns: [

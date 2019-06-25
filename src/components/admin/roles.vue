@@ -25,39 +25,57 @@
                     />
                   </div>
                 </q-btn-dropdown>
-                <!-- кнопка удалить Роль -->
-                <q-btn outline dense size="sm" icon="delete"/>
               </q-btn-group>
             </q-item-section>
           </q-item>
-          <q-item v-for="(item, index) in dsRoles" :key="index">
-            <q-item-section>{{item.name}}</q-item-section>
-          </q-item>
+          <!-- список ролей -->
           <q-item
+            v-for="(item, index) in dsRoles"
+            :key="index"
             clickable
             v-ripple
-            :active="link === 'inbox'"
-            @click="link = 'inbox'"
+            :active="link === index"
             active-class="my-menu-link"
+            @click="link = index"
           >
-            <q-item-section>Role 1</q-item-section>
-          </q-item>
-          <q-item
-            clickable
-            :active="link === 'outbox'"
-            @click="link = 'outbox'"
-            active-class="my-menu-link"
-          >
-            <q-item-section>Role 2</q-item-section>
-          </q-item>
-          <q-item>
-            <q-item-section>Role 3</q-item-section>
+            <q-item-section>
+              <q-item-label>{{item.name}}</q-item-label>
+            </q-item-section>
+            <!-- кнопка удалить Роль -->
+            <q-item-section side>
+              <q-btn class="text-grey-8 q-gutter-x-xs" flat dense round size="sm" icon="delete" @click.stop="">
+                <q-menu
+                  anchor="bottom left"
+                  self="top left"
+                  :content-style="popoverStyle"
+                  auto-close
+                >
+                  <span id="popover-title">Роль выбрана для удаления</span>
+                  <div id="del-buttons">
+                    <q-btn
+                      outliner
+                      rounded
+                      dense
+                      size="form-label-inverted"
+                      color="red-14"
+                      text-color="white"
+                      label="Отменить"
+                    />
+                    <q-btn
+                      outliner
+                      rounded
+                      dense
+                      color="red-4"
+                      text-color="white"
+                      label="Удалить"
+                      @click="onDeleteDocument(item, 'name', deleteRole)"
+                    />
+                  </div>
+                </q-menu>
+              </q-btn>
+            </q-item-section>
           </q-item>
         </q-list>
-        <div class="col">row 1</div>
-        <div class="col">row 2</div>
-        <div class="col">row 3</div>
-        <div class="self-end">row 4</div>
       </div>
       <q-separator vertical class="self-stretch"/>
       <div class="col-8">
@@ -77,7 +95,12 @@ import {
   mapActions,
 } from 'vuex';
 
+// import { PageContainer } from '../mixins/page-container';
+import { DeletePopover } from '../mixins/delete-popover';
+
 export default {
+  mixins: [DeletePopover],
+
   data() {
     return {
       roleData: '',
@@ -104,10 +127,10 @@ export default {
 
     ...mapActions({
       // getDocuments: 'ds/getCustomers',
-      // deleteDocument: 'ds/deleteCustomer',
       // updateDocument: 'ds/updateCustomer',
       getRoles: 'ds/getRoles',
       addRole: 'ds/addRole',
+      deleteRole: 'ds/deleteRole',
     }),
 
     // обработка события закрытия диалога создания нового документа
@@ -133,9 +156,11 @@ export default {
           });
         });
     },
+
   },
 
   mounted() {
+    // если роли отсутствуют, то загружаем их
     if (this.dsRoles.length === 0) {
       this.setLoading(true);
       this.getRoles().then()
@@ -153,6 +178,9 @@ export default {
           this.setLoading(false);
         });
     }
+
+    // установка ширины всплывающего сообщения об удалении роли
+    this.popoverStyle.minWidth = '400px';
   },
 };
 </script>

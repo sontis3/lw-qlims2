@@ -100,7 +100,7 @@
                     color="red-4"
                     text-color="white"
                     label="Удалить"
-                    @click="onDeleteDocument(props.row, 'name_ru')"
+                    @click="onDeleteDocument(props.row, 'name_ru', deleteDocument)"
                   />
                 </div>
               </q-menu>
@@ -167,10 +167,11 @@ import {
   mapActions,
 } from 'vuex';
 import { PageContainer } from '../mixins/page-container';
+import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
   // name: 'ComponentName',
-  mixins: [PageContainer],
+  mixins: [PageContainer, DeletePopover],
   data() {
     return {
       columns: [

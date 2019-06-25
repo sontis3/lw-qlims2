@@ -31,3 +31,12 @@ export const addRole = async ({ getters, dispatch }, roleName) => {
   await dispatch(getAction);
   return response;
 };
+
+// удалить документ
+export const deleteRole = async ({ getters, dispatch }, id) => {
+  const url = `${getUrl(getters)}/${id}`;
+
+  const response = await axios.delete(url);
+  await dispatch(getAction);
+  return response;
+};
