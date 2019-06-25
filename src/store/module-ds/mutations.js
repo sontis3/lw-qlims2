@@ -65,10 +65,24 @@ export const setUserData = (state, userData) => { state.userData = userData; };
 
 
 import axios from 'axios';
+
 // выход из аккаунта
 export const logout = (state) => {
   state.userData = null;
   axios.defaults.headers.common.Authorization = '';
+};
+
+// очистить источники данных
+export const cleanOutDs = (state) => {
+  // Администрирование
+  state.dsSystemObjects = [];        // Системные объекты
+  state.dsSystemObjectsActions = []; // Действия над Системными объектами
+  state.dsRoles = [];                // Роли
+
+  // Справочники
+  state.dsCustomers = [];        // Заказчики
+  state.dsShortCustomers = [];   // Заказчики для QSelect
+  state.dsCountries = [];        // Страны
 };
 
 // установка конфигурации авторизации

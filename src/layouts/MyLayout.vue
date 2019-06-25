@@ -87,7 +87,7 @@
           <div class="text-h6">Вы хотите выйти из аккаунта?</div>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Выйти" @click="logout" v-close-popup/>
+          <q-btn flat label="Выйти" @click="onLogout" v-close-popup/>
           <q-btn flat label="Отмена" v-close-popup/>
         </q-card-actions>
       </q-card>
@@ -287,6 +287,7 @@ export default {
       addErrorNotification: 'appMode/addErrorNotification',
       deleteErrorNotification: 'appMode/deleteErrorNotification',
       logout: 'ds/logout',
+      cleanOutDs: 'ds/cleanOutDs',
       setAbility: 'ds/setAbility',
     }),
 
@@ -309,6 +310,11 @@ export default {
         return false;
       }
       return true;
+    },
+
+    onLogout() {
+      this.cleanOutDs();
+      this.logout();
     },
 
     // закрытие формы регистрации
