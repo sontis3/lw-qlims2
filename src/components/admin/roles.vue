@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="dataReady">
     <div class="row no-wrap" style="min-height: calc(100vh - 73px);">
       <!-- колонка ролей -->
       <div class="column col-2 full-height">
@@ -111,6 +111,7 @@ export default {
 
   data() {
     return {
+      dataReady: false,           // флаг готовности данных для показа
       roleData: '',
       link: 0,
 
@@ -199,11 +200,11 @@ export default {
 
   },
 
-  mounted() {
+  async mounted() {
     // если роли отсутствуют, то загружаем их
     if (this.dsRoles.length === 0) {
       this.setLoading(true);
-      this.getRoles().then()
+      await this.getRoles()
         .catch((err) => {
           const errDescription = this.getErrorDescription('get', err);
           this.addErrorNotification({ message: err.message, description: errDescription });
@@ -222,7 +223,7 @@ export default {
     // если действия над системными объектами отсутствуют, то загружаем их
     if (this.dsSystemObjectsActions.length === 0) {
       this.setLoading(true);
-      this.getSystemObjectsActions().then()
+      await this.getSystemObjectsActions()
         .catch((err) => {
           const errDescription = this.getErrorDescription('get', err);
           this.addErrorNotification({ message: err.message, description: errDescription });
@@ -240,6 +241,17 @@ export default {
 
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';
+
+    this.columns = this.dsSystemObjectsActions.map(item => ({
+      name: item.name,
+      label: item.name,
+      align: 'center',
+      field: item.name,
+      sortable: true,
+      sort: (a, b) => a - b,
+      classes: 'as-checkbox',
+    }));
+    this.dataReady = true;
   },
 };
 </script>
