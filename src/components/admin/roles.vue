@@ -87,7 +87,14 @@
       </div>
       <q-separator vertical class="self-stretch"/>
       <div class="col-8">
-        <q-table title="Разрешения" dense separator="cell" :columns="columns"></q-table>
+        <q-table
+          title="Разрешения"
+          dense
+          separator="cell"
+          :columns="columns"
+          :visibleColumns="visibleColumns"
+          :data="dsSystemObjects"
+        ></q-table>
       </div>
       <q-separator vertical class="self-stretch"/>
       <div class="col">Third column</div>
@@ -115,26 +122,9 @@ export default {
       roleData: '',
       link: 0,
 
-      columns: [
-        {
-          name: 'desc',           // уникальный ид столбца
-          required: true,         // обязательный
-          label: 'Наименование',  // заголовок столбца
-          align: 'left',          // выравнивание
-          field: 'name',          // поле источник значений
-          sortable: true,         // сортируемый столбец
-          classes: 'popup-edit',  // пользовательские классы
-        },
-        {
-          name: 'enabled',
-          label: 'Действующий',
-          align: 'center',
-          field: 'enabled',
-          sortable: true,
-          sort: (a, b) => a - b,
-          classes: 'as-checkbox',
-        },
-      ],
+      columns: [],
+      visibleColumns: [],
+      ds: [],
     };
   },
 
@@ -142,6 +132,8 @@ export default {
     ...mapState({
       dsRoles: state => state.ds.dsRoles,        // источник данных Роли
       dsSystemObjectsActions: state => state.ds.dsSystemObjectsActions,   // источник данных Действия над системными объектами
+      dsSystemObjects: state => state.ds.dsSystemObjects,   // источник данных Системные объекты
+      dsRules: state => state.ds.dsRules,        // источник данных Правила Ролей
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
@@ -161,6 +153,8 @@ export default {
       addRole: 'ds/addRole',
       deleteRole: 'ds/deleteRole',
       getSystemObjectsActions: 'ds/getSystemObjectsActions',
+      getSystemObjects: 'ds/getSystemObjects',
+      getRules: 'ds/getRules',
     }),
 
     // обработка события закрытия диалога создания нового документа
@@ -239,6 +233,44 @@ export default {
         });
     }
 
+    // если системные объекты отсутствуют, то загружаем их
+    if (this.dsSystemObjects.length === 0) {
+      this.setLoading(true);
+      await this.getSystemObjects()
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('get', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
+    }
+
+    // если правила роли отсутствуют, то загружаем их
+    if (this.dsRules.length === 0) {
+      this.setLoading(true);
+      await this.getRules()
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('get', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
+    }
+
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';
 
@@ -251,6 +283,19 @@ export default {
       sort: (a, b) => a - b,
       classes: 'as-checkbox',
     }));
+    this.columns.unshift({
+      name: 'system_object',
+      label: 'Системный объект',
+      align: 'center',
+      field: 'system_object',
+      sortable: true,
+      sort: (a, b) => a - b,
+      classes: 'as-checkbox',
+    });
+
+    this.visibleColumns = this.dsSystemObjectsActions.map(item => item.name);
+    this.visibleColumns.unshift('system_object');
+
     this.dataReady = true;
   },
 };
