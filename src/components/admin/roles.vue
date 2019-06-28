@@ -86,6 +86,7 @@
         </q-list>
       </div>
       <q-separator vertical class="self-stretch"/>
+      <!-- таблица правил системных объектов -->
       <div class="col-8">
         <q-table
           title="Разрешения"
@@ -93,8 +94,24 @@
           separator="cell"
           :columns="columns"
           :visibleColumns="visibleColumns"
-          :data="dsSystemObjects"
-        ></q-table>
+          :data="dsRolePermissions"
+        >
+          <!-- слот тела таблицы -->
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                <template v-if="col.classes === 'as-checkbox'" :props="props">
+                  <q-checkbox
+                    :value="props.row.viewActions[col.name]"
+                    @input="(val) => onUpdateDocument(val, props.row, col, 'name')"
+                  />
+                </template>
+
+                <template v-else>{{ col.value }}</template>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
       </div>
       <q-separator vertical class="self-stretch"/>
       <div class="col">Third column</div>
@@ -133,7 +150,7 @@ export default {
       dsRoles: state => state.ds.dsRoles,        // источник данных Роли
       dsSystemObjectsActions: state => state.ds.dsSystemObjectsActions,   // источник данных Действия над системными объектами
       dsSystemObjects: state => state.ds.dsSystemObjects,   // источник данных Системные объекты
-      dsRules: state => state.ds.dsRules,        // источник данных Правила Ролей
+      dsRolePermissions: state => state.ds.dsRolePermissions,        // источник данных Правила Ролей
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
@@ -145,7 +162,7 @@ export default {
     ...mapMutations({
       addErrorNotification: 'appMode/addErrorNotification',
       setLoading: 'ds/setLoading',
-      //   // updateDsCustomers: 'ds/updateDsCustomers',
+      preparePermissionViewData: 'ds/preparePermissionViewData',
     }),
 
     ...mapActions({
@@ -157,6 +174,13 @@ export default {
       getRules: 'ds/getRules',
     }),
 
+    onUpdateDocument(val, row, col, fieldName) {
+      debugger;
+      console.log(val);
+      console.log(row);
+      console.log(col);
+      return fieldName;
+    },
     // обработка события закрытия диалога создания нового документа
     async onAddRole() {
       const res = this.addRole(this.roleData);
@@ -252,33 +276,40 @@ export default {
         });
     }
 
-    // если правила роли отсутствуют, то загружаем их
-    if (this.dsRules.length === 0) {
-      this.setLoading(true);
-      await this.getRules()
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('get', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
+
+    // загрузка правил роли
+    this.setLoading(true);
+    await this.getRules('123456789012345678901234')
+      .catch((err) => {
+        const errDescription = this.getErrorDescription('get', err);
+        this.addErrorNotification({ message: err.message, description: errDescription });
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: errDescription,
+          icon: 'report_problem',
         });
-    }
+      })
+      .finally(() => {
+        this.setLoading(false);
+      });
+
+    // создание массива данных для показа действий над объектами
+    // this.dsRolePermissions.forEach((element) => {
+    //   element.boolActions = [];
+    // });
+    this.preparePermissionViewData(this.dsSystemObjectsActions.map(item => item.name));
 
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';
 
+
+    // установка колонок таблицы
     this.columns = this.dsSystemObjectsActions.map(item => ({
       name: item.name,
       label: item.name,
       align: 'center',
-      field: item.name,
+      field: row => row.viewActions[item.name],
       sortable: true,
       sort: (a, b) => a - b,
       classes: 'as-checkbox',
@@ -287,12 +318,11 @@ export default {
       name: 'system_object',
       label: 'Системный объект',
       align: 'center',
-      field: 'system_object',
-      sortable: true,
-      sort: (a, b) => a - b,
-      classes: 'as-checkbox',
+      field: row => row.system_object.name,
+      sortable: true,         // сортируемый столбец
     });
 
+    // настройка показываемых колонок таблицы
     this.visibleColumns = this.dsSystemObjectsActions.map(item => item.name);
     this.visibleColumns.unshift('system_object');
 

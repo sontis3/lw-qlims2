@@ -33,7 +33,7 @@ export default {
   dsSystemObjects: [],        // Системные объекты
   dsSystemObjectsActions: [], // Действия над Системными объектами
   dsRoles: [],                // Роли
-  dsRules: [],                // Правила ролей
+  dsRolePermissions: [],                // Правила ролей
 
   // Справочники
   dsCustomers: [],        // Заказчики

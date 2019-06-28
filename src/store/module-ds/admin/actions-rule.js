@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 import axios from 'axios';
 
 // помощник для уменьшения редактирования кода
@@ -6,9 +7,9 @@ const setDsMutation = 'setDsRules';
 const getAction = 'getRules';
 
 // получить полный источник данных
-export const getRules = async ({ commit, getters }) => {
+export const getRules = async ({ commit, getters }, roleId) => {
   const url = getUrl(getters);
-  const response = await axios.get(url)
+  const response = await axios.get(url, { params: { 'roleId': roleId } })
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки

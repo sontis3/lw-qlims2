@@ -16,7 +16,7 @@ export const setDsRoles = (state, newDs) => {
 
 // Правила Ролей
 export const setDsRules = (state, newDs) => {
-  state.dsRules = newDs;
+  state.dsRolePermissions = newDs;
 };
 
 // Справочники
@@ -83,7 +83,7 @@ export const cleanOutDs = (state) => {
   state.dsSystemObjects = [];        // Системные объекты
   state.dsSystemObjectsActions = []; // Действия над Системными объектами
   state.dsRoles = [];                // Роли
-  state.dsRules = [];                // Правила ролей
+  state.dsRolePermissions = [];      // Правила выбранной роли
 
   // Справочники
   state.dsCustomers = [];        // Заказчики
@@ -98,4 +98,19 @@ export const setAbility = (state, obj) => {
 
 export const updateAbility = (state, obj) => {
   state.ability.update(obj);
+};
+
+// добавление данных для облегчения показа
+export const preparePermissionViewData = (state, arr) => {
+  state.dsRolePermissions.forEach((permission) => {
+    // eslint-disable-next-line no-new-object
+    permission.viewActions = new Object();
+    arr.forEach((element) => {
+      if (permission.actions.find(action => action.name === element) === undefined) {
+        permission.viewActions[element] = false;
+      } else {
+        permission.viewActions[element] = true;
+      }
+    });
+  });
 };
