@@ -96,6 +96,12 @@
           :visibleColumns="visibleColumns"
           :data="dsRolePermissions"
         >
+          <!-- слот панели кнопок вверху справа -->
+          <template v-slot:top-right="props">
+            <!-- кнопка добавления правил для объекта -->
+            <q-btn flat round dense icon="add_box" @click="onShowDialogAddRule"/>
+          </template>
+
           <!-- слот тела таблицы -->
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -116,6 +122,73 @@
       <q-separator vertical class="self-stretch"/>
       <div class="col">Third column</div>
     </div>
+
+    <!-- Диалог добавления правила -->
+    <q-dialog v-model="showDialog" no-backdrop-dismiss>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Добавление нового правила</div>
+        </q-card-section>
+        <q-card-section>
+          <!-- <div class="row q-mb-md">
+            <q-input
+              v-model="addFormFields.name"
+              autofocus
+              label="Наименование"
+              :error="$v.addFormFields.name.$error"
+            >
+              <template v-slot:error>Введите заказчика.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
+          </div>-->
+          <div class="row q-mb-md">
+            <q-select
+              v-model="addRuleFormFields.system_objects"
+              :options="getRoleNotUsedSystemObjects"
+              option-value="id"
+              option-label="name"
+              label="Системный объект"
+              style="width: 240px"
+              :error="$v.addRuleFormFields.system_objects.$error"
+              filled
+              dense
+              options-dense
+              multiple
+              use-chips
+              stack-label
+            ></q-select>
+          </div>
+          <div class="row q-mb-md">
+            <q-option-group
+              v-model="addRuleFormFields.actionsGroup"
+              :options="addRuleFormFields.actionsOptions"
+              type="checkbox"
+            />
+          </div>
+          <!-- <div class="row q-mb-md">
+            <q-input
+              v-model="addFormFields.phone_1"
+              :error="$v.addFormFields.phone_1.$error"
+              label="Телефон 1"
+              type="tel"
+              bottom-slots
+            >
+              <template v-slot:before>
+                <q-icon name="phone"/>
+              </template>
+              <template v-slot:error>Ошибка формата номера телефона.</template>
+            </q-input>
+          </div>-->
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" v-close-popup/>
+          <q-btn flat label="Add" @click="validateAndClose" v-close-popup="addRuleFormValid"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -126,6 +199,7 @@ import {
   mapMutations,
   mapActions,
 } from 'vuex';
+import { required } from 'vuelidate/lib/validators';
 
 // import { PageContainer } from '../mixins/page-container';
 import { DeletePopover } from '../mixins/delete-popover';
@@ -136,13 +210,26 @@ export default {
   data() {
     return {
       dataReady: false,           // флаг готовности данных для показа
-      roleData: '',
-      link: 0,
+      roleData: '',               // поле для добавления роли
+      link: 0,                    // индекс выбранной роли в списке
 
-      columns: [],
+      columns: [],                // колонки таблицы правил
       visibleColumns: [],
-      ds: [],
+      showDialog: false,          // показать/скрыть диалог добавления
+      addRuleFormFields: {        // поля формы добавления правила
+        system_objects: null,     // массив системных объектов, для кот. добавляются правила
+        actionsGroup: [],         // массив выбранных чекбоксов действий
+        actionsOptions: [],       // весь массив чекбоксов действий
+      },
+      addRuleFormValid: true,    // форма добавления правил валидна?
     };
+  },
+
+  // правила валидации
+  validations: {
+    addRuleFormFields: {
+      system_objects: { required },
+    },
   },
 
   computed: {
@@ -154,7 +241,7 @@ export default {
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
-      //   getEnabledCountries: 'ds/getEnabledCountries',
+      getRoleNotUsedSystemObjects: 'ds/getRoleNotUsedSystemObjects',
     }),
   },
 
@@ -172,7 +259,55 @@ export default {
       getSystemObjectsActions: 'ds/getSystemObjectsActions',
       getSystemObjects: 'ds/getSystemObjects',
       getRules: 'ds/getRules',
+      addRules: 'ds/addRules',
     }),
+
+    // валидация формы добавления правил роли
+    validateAndClose() {
+      this.$v.addRuleFormFields.$touch();
+      if (this.$v.addRuleFormFields.$error) {
+        this.addRuleFormValid = false;
+        return;
+      }
+      this.addRuleFormValid = true;
+      this.onAddRule();
+    },
+
+    // показать диалог добавления правила для роли
+    onShowDialogAddRule() {
+      this.addRuleFormFields.system_objects = null;
+      this.addRuleFormFields.actionsGroup = [];
+      this.showDialog = true;
+    },
+
+    // обработка события закрытия диалога добавления новых правил
+    async onAddRule() {
+      const payload = {
+        roleId: this.dsRoles[this.link].id,
+        system_objectIds: this.addRuleFormFields.system_objects.map(item => item.id),
+        actionIds: this.addRuleFormFields.actionsGroup,
+      };
+      const res = this.addRules(payload);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Правила '${response.data}' успешно созданы.`,
+          icon: 'save',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('post', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        });
+    },
 
     onUpdateDocument(val, row, col, fieldName) {
       debugger;
@@ -181,7 +316,8 @@ export default {
       console.log(col);
       return fieldName;
     },
-    // обработка события закрытия диалога создания нового документа
+
+    // обработка события закрытия диалога создания новой роли
     async onAddRole() {
       const res = this.addRole(this.roleData);
       res.then((response) => {
@@ -279,7 +415,7 @@ export default {
 
     // загрузка правил роли
     this.setLoading(true);
-    await this.getRules('123456789012345678901234')
+    await this.getRules(this.dsRoles[this.link].id)
       .catch((err) => {
         const errDescription = this.getErrorDescription('get', err);
         this.addErrorNotification({ message: err.message, description: errDescription });
@@ -325,6 +461,9 @@ export default {
     // настройка показываемых колонок таблицы
     this.visibleColumns = this.dsSystemObjectsActions.map(item => item.name);
     this.visibleColumns.unshift('system_object');
+
+    // настройка показываемых чекбоксов акций в форме добавления правил
+    this.addRuleFormFields.actionsOptions = this.dsSystemObjectsActions.map(item => ({ label: item.name, value: item.id }));
 
     this.dataReady = true;
   },

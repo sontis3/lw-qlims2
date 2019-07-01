@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // помощник для уменьшения редактирования кода
 const getUrl = getters => getters.rulesUrl;
-const setDsMutation = 'setDsRules';
+const setDsMutation = 'setDsRolePermissions';
 const getAction = 'getRules';
 
 // получить полный источник данных
@@ -20,13 +20,8 @@ export const getRules = async ({ commit, getters }, roleId) => {
 };
 
 // добавить документ
-export const addRule = async ({ getters, dispatch }, roleName) => {
+export const addRules = async ({ getters, dispatch }, postData) => {
   const url = getUrl(getters);
-
-  const postData = {
-    name: roleName,
-    enabled: true,
-  };
 
   const response = await axios.post(url, postData);
   await dispatch(getAction);

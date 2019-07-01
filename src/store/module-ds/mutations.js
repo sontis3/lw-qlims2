@@ -15,7 +15,7 @@ export const setDsRoles = (state, newDs) => {
 };
 
 // Правила Ролей
-export const setDsRules = (state, newDs) => {
+export const setDsRolePermissions = (state, newDs) => {
   state.dsRolePermissions = newDs;
 };
 

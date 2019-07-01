@@ -66,6 +66,7 @@ module.exports = function (ctx) {
         'QSeparator',
         'QTabPanel',
         'QScrollArea',
+        'QOptionGroup',
       ],
 
       directives: [
