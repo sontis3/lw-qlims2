@@ -10,7 +10,7 @@ const getAction = 'getRules';
 export const getRules = async ({ commit, getters }, roleId) => {
   const url = getUrl(getters);
   const response = await axios.get(url, { params: { 'roleId': roleId } })
-    .then((resp) => { commit(setDsMutation, resp.data); return resp; })
+    .then((resp) => { commit(setDsMutation, resp.data.permissions); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки
       commit(setDsMutation, []);
