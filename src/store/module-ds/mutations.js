@@ -101,7 +101,8 @@ export const updateAbility = (state, obj) => {
 };
 
 // добавление данных для облегчения показа
-export const preparePermissionViewData = (state, arr) => {
+export const preparePermissionViewData = (state) => {
+  const arr = state.dsSystemObjectsActions.map(item => item.name);
   state.dsRolePermissions.forEach((permission) => {
     // eslint-disable-next-line no-new-object
     permission.viewActions = new Object();

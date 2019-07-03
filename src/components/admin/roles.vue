@@ -288,11 +288,12 @@ export default {
         actionIds: this.addRuleFormFields.actionsGroup,
       };
       const res = this.addRules(payload);
+      // eslint-disable-next-line no-unused-vars
       res.then((response) => {
         this.$q.notify({
           color: 'positive',
           position: 'top',
-          message: `Правила '${response.data}' успешно созданы.`,
+          message: 'Правила успешно созданы.',
           icon: 'save',
         });
       })
@@ -429,12 +430,6 @@ export default {
       .finally(() => {
         this.setLoading(false);
       });
-
-    // создание массива данных для показа действий над объектами
-    // this.dsRolePermissions.forEach((element) => {
-    //   element.boolActions = [];
-    // });
-    this.preparePermissionViewData(this.dsSystemObjectsActions.map(item => item.name));
 
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';

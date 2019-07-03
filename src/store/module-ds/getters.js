@@ -22,7 +22,7 @@ export const loginUrl = state => `${state.apiUrl}/${state.loginPartUrl}`;
 // получить действующие страны
 export const getEnabledCountries = state => state.dsCountries.filter(el => el.enabled);
 
-// активные системные объекты не используемые ролью
+// активные системные объекты не используемые ролью (для показа в списке выбора)
 export const getRoleNotUsedSystemObjects = (state) => {
   const toRemove = state.dsRolePermissions.map(item => item.system_object.id);
   return state.dsSystemObjects.filter(el => el.enabled && !toRemove.includes(el.id));
