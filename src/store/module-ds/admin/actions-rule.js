@@ -28,7 +28,7 @@ export const addRules = async ({ getters, dispatch }, postData) => {
   const url = getUrl(getters);
 
   const response = await axios.post(url, postData);
-  await dispatch(getAction);
+  await dispatch(getAction, postData.roleId);
   return response;
 };
 

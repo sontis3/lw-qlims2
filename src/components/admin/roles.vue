@@ -36,7 +36,7 @@
             v-ripple
             :active="link === index"
             active-class="my-menu-link"
-            @click="link = index"
+            @click="changeActiveRole(index)"
           >
             <q-item-section>
               <q-item-label>{{item.name}}</q-item-label>
@@ -262,6 +262,25 @@ export default {
       addRules: 'ds/addRules',
     }),
 
+    // загрузка правил текущей роли
+    async loadCurrentRules() {
+      this.setLoading(true);
+      await this.getRules(this.dsRoles[this.link].id)
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('get', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
+    },
+
     // валидация формы добавления правил роли
     validateAndClose() {
       this.$v.addRuleFormFields.$touch();
@@ -343,8 +362,9 @@ export default {
     },
 
     // смена текущей роли
-    changeActiveRole(index) {
+    async changeActiveRole(index) {
       this.link = index;
+      await this.loadCurrentRules();
     },
 
     // смена текущей роли
@@ -413,27 +433,27 @@ export default {
         });
     }
 
+    await this.loadCurrentRules();
 
-    // загрузка правил роли
-    this.setLoading(true);
-    await this.getRules(this.dsRoles[this.link].id)
-      .catch((err) => {
-        const errDescription = this.getErrorDescription('get', err);
-        this.addErrorNotification({ message: err.message, description: errDescription });
-        this.$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: errDescription,
-          icon: 'report_problem',
-        });
-      })
-      .finally(() => {
-        this.setLoading(false);
-      });
+    // // загрузка правил роли
+    // this.setLoading(true);
+    // await this.getRules(this.dsRoles[this.link].id)
+    //   .catch((err) => {
+    //     const errDescription = this.getErrorDescription('get', err);
+    //     this.addErrorNotification({ message: err.message, description: errDescription });
+    //     this.$q.notify({
+    //       color: 'negative',
+    //       position: 'top',
+    //       message: errDescription,
+    //       icon: 'report_problem',
+    //     });
+    //   })
+    //   .finally(() => {
+    //     this.setLoading(false);
+    //   });
 
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';
-
 
     // установка колонок таблицы
     this.columns = this.dsSystemObjectsActions.map(item => ({
