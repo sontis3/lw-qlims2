@@ -14,6 +14,7 @@ export default {
   systemObjectActionsPartUrl: 'system-objects-actions',
   rolesPartUrl: 'roles',
   rulesPartUrl: 'rules',
+  permissionsPartUrl: 'permissions',
 
   // справочники
   customersPartUrl: 'customers',

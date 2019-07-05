@@ -9,7 +9,7 @@ const getAction = 'getRoles';
 export const getRoles = async ({ commit, getters }) => {
   const url = getUrl(getters);
   const response = await axios.get(url)
-    .then((resp) => { commit(setDsMutation, resp.data); return resp; })
+    .then((resp) => { commit(setDsMutation, resp.data); commit('preparePermissionViewData'); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки
       commit(setDsMutation, []);

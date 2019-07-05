@@ -103,15 +103,30 @@ export const updateAbility = (state, obj) => {
 // добавление данных для облегчения показа
 export const preparePermissionViewData = (state) => {
   const arr = state.dsSystemObjectsActions.map(item => item.name);
-  state.dsRolePermissions.forEach((permission) => {
-    // eslint-disable-next-line no-new-object
-    permission.viewActions = new Object();
-    arr.forEach((element) => {
-      if (permission.actions.find(action => action.name === element) === undefined) {
-        permission.viewActions[element] = false;
-      } else {
-        permission.viewActions[element] = true;
-      }
+  state.dsRoles.forEach((role) => {
+    role.permissions.forEach((permission) => {
+      // eslint-disable-next-line no-new-object
+      permission.viewActions = new Object();
+      arr.forEach((element) => {
+        if (permission.actions.find(action => action.name === element) === undefined) {
+          permission.viewActions[element] = false;
+        } else {
+          permission.viewActions[element] = true;
+        }
+      });
     });
   });
+  // export const preparePermissionViewData = (state) => {
+  //   const arr = state.dsSystemObjectsActions.map(item => item.name);
+  //   state.dsRolePermissions.forEach((permission) => {
+  //     // eslint-disable-next-line no-new-object
+  //     permission.viewActions = new Object();
+  //     arr.forEach((element) => {
+  //       if (permission.actions.find(action => action.name === element) === undefined) {
+  //         permission.viewActions[element] = false;
+  //       } else {
+  //         permission.viewActions[element] = true;
+  //       }
+  //     });
+  //   });
 };

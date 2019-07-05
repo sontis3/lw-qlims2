@@ -94,7 +94,7 @@
           separator="cell"
           :columns="columns"
           :visibleColumns="visibleColumns"
-          :data="dsRolePermissions"
+          :data="dsRoles[link].permissions"
         >
           <!-- слот панели кнопок вверху справа -->
           <template v-slot:top-right="props">
@@ -146,7 +146,7 @@
           <div class="row q-mb-md">
             <q-select
               v-model="addRuleFormFields.system_objects"
-              :options="getRoleNotUsedSystemObjects"
+              :options="getRoleNotUsedSystemObjects(link)"
               option-value="id"
               option-label="name"
               label="Системный объект"
@@ -262,24 +262,27 @@ export default {
       addRules: 'ds/addRules',
     }),
 
-    // загрузка правил текущей роли
-    async loadCurrentRules() {
-      this.setLoading(true);
-      await this.getRules(this.dsRoles[this.link].id)
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('get', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
-        });
-    },
+    // // загрузка правил текущей роли
+    // async loadCurrentRules() {
+    //   if (this.dsRoles.length === 0) {
+    //     return;
+    //   }
+    //   this.setLoading(true);
+    //   await this.getRules(this.dsRoles[this.link].id)
+    //     .catch((err) => {
+    //       const errDescription = this.getErrorDescription('get', err);
+    //       this.addErrorNotification({ message: err.message, description: errDescription });
+    //       this.$q.notify({
+    //         color: 'negative',
+    //         position: 'top',
+    //         message: errDescription,
+    //         icon: 'report_problem',
+    //       });
+    //     })
+    //     .finally(() => {
+    //       this.setLoading(false);
+    //     });
+    // },
 
     // валидация формы добавления правил роли
     validateAndClose() {
@@ -364,7 +367,7 @@ export default {
     // смена текущей роли
     async changeActiveRole(index) {
       this.link = index;
-      await this.loadCurrentRules();
+      // await this.loadCurrentRules();
     },
 
     // смена текущей роли
@@ -376,25 +379,6 @@ export default {
   },
 
   async mounted() {
-    // если роли отсутствуют, то загружаем их
-    if (this.dsRoles.length === 0) {
-      this.setLoading(true);
-      await this.getRoles()
-        .catch((err) => {
-          const errDescription = this.getErrorDescription('get', err);
-          this.addErrorNotification({ message: err.message, description: errDescription });
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errDescription,
-            icon: 'report_problem',
-          });
-        })
-        .finally(() => {
-          this.setLoading(false);
-        });
-    }
-
     // если действия над системными объектами отсутствуют, то загружаем их
     if (this.dsSystemObjectsActions.length === 0) {
       this.setLoading(true);
@@ -433,7 +417,24 @@ export default {
         });
     }
 
-    await this.loadCurrentRules();
+    // загрузка ролей (обязательно перед этим заполнить dsSystemObjectsActions)
+    this.setLoading(true);
+    await this.getRoles()
+      .catch((err) => {
+        const errDescription = this.getErrorDescription('get', err);
+        this.addErrorNotification({ message: err.message, description: errDescription });
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: errDescription,
+          icon: 'report_problem',
+        });
+      })
+      .finally(() => {
+        this.setLoading(false);
+      });
+
+    // await this.loadCurrentRules();
 
     // // загрузка правил роли
     // this.setLoading(true);
