@@ -4,4 +4,3 @@ export * from './actions-auth';
 export * from './admin/actions-system-object';
 export * from './admin/actions-system-object-action';
 export * from './admin/actions-role';
-export * from './admin/actions-rule';

@@ -94,7 +94,7 @@
           separator="cell"
           :columns="columns"
           :visibleColumns="visibleColumns"
-          :data="dsRoles[link].permissions"
+          :data="dsRoles.length != 0 ? dsRoles[link].permissions : []"
         >
           <!-- слот панели кнопок вверху справа -->
           <template v-slot:top-right="props">
@@ -145,13 +145,13 @@
           </div>-->
           <div class="row q-mb-md">
             <q-select
-              v-model="addRuleFormFields.system_objects"
+              v-model="addPermissionsFormFields.system_objects"
               :options="getRoleNotUsedSystemObjects(link)"
               option-value="id"
               option-label="name"
               label="Системный объект"
               style="width: 240px"
-              :error="$v.addRuleFormFields.system_objects.$error"
+              :error="$v.addPermissionsFormFields.system_objects.$error"
               filled
               dense
               options-dense
@@ -162,8 +162,8 @@
           </div>
           <div class="row q-mb-md">
             <q-option-group
-              v-model="addRuleFormFields.actionsGroup"
-              :options="addRuleFormFields.actionsOptions"
+              v-model="addPermissionsFormFields.actionsGroup"
+              :options="addPermissionsFormFields.actionsOptions"
               type="checkbox"
             />
           </div>
@@ -185,7 +185,7 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" @click="validateAndClose" v-close-popup="addRuleFormValid"/>
+          <q-btn flat label="Add" @click="validateAndClose" v-close-popup="addPermissionsFormValid"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -213,21 +213,21 @@ export default {
       roleData: '',               // поле для добавления роли
       link: 0,                    // индекс выбранной роли в списке
 
-      columns: [],                // колонки таблицы правил
+      columns: [],                // колонки таблицы разрешений
       visibleColumns: [],
       showDialog: false,          // показать/скрыть диалог добавления
-      addRuleFormFields: {        // поля формы добавления правила
-        system_objects: null,     // массив системных объектов, для кот. добавляются правила
+      addPermissionsFormFields: {        // поля формы добавления разрешений
+        system_objects: null,     // массив системных объектов, для кот. добавляются разрешения
         actionsGroup: [],         // массив выбранных чекбоксов действий
         actionsOptions: [],       // весь массив чекбоксов действий
       },
-      addRuleFormValid: true,    // форма добавления правил валидна?
+      addPermissionsFormValid: true,    // форма добавления разрешений валидна?
     };
   },
 
   // правила валидации
   validations: {
-    addRuleFormFields: {
+    addPermissionsFormFields: {
       system_objects: { required },
     },
   },
@@ -237,7 +237,6 @@ export default {
       dsRoles: state => state.ds.dsRoles,        // источник данных Роли
       dsSystemObjectsActions: state => state.ds.dsSystemObjectsActions,   // источник данных Действия над системными объектами
       dsSystemObjects: state => state.ds.dsSystemObjects,   // источник данных Системные объекты
-      dsRolePermissions: state => state.ds.dsRolePermissions,        // источник данных Правила Ролей
     }),
     ...mapGetters({
       getErrorDescription: 'appMode/getErrorDescription',
@@ -258,64 +257,41 @@ export default {
       deleteRole: 'ds/deleteRole',
       getSystemObjectsActions: 'ds/getSystemObjectsActions',
       getSystemObjects: 'ds/getSystemObjects',
-      getRules: 'ds/getRules',
-      addRules: 'ds/addRules',
+      addPermissions: 'ds/addPermissions',
     }),
 
-    // // загрузка правил текущей роли
-    // async loadCurrentRules() {
-    //   if (this.dsRoles.length === 0) {
-    //     return;
-    //   }
-    //   this.setLoading(true);
-    //   await this.getRules(this.dsRoles[this.link].id)
-    //     .catch((err) => {
-    //       const errDescription = this.getErrorDescription('get', err);
-    //       this.addErrorNotification({ message: err.message, description: errDescription });
-    //       this.$q.notify({
-    //         color: 'negative',
-    //         position: 'top',
-    //         message: errDescription,
-    //         icon: 'report_problem',
-    //       });
-    //     })
-    //     .finally(() => {
-    //       this.setLoading(false);
-    //     });
-    // },
-
-    // валидация формы добавления правил роли
+    // валидация формы добавления разрешений роли
     validateAndClose() {
-      this.$v.addRuleFormFields.$touch();
-      if (this.$v.addRuleFormFields.$error) {
-        this.addRuleFormValid = false;
+      this.$v.addPermissionsFormFields.$touch();
+      if (this.$v.addPermissionsFormFields.$error) {
+        this.addPermissionsFormValid = false;
         return;
       }
-      this.addRuleFormValid = true;
-      this.onAddRule();
+      this.addPermissionsFormValid = true;
+      this.onAddPermissions();
     },
 
     // показать диалог добавления правила для роли
     onShowDialogAddRule() {
-      this.addRuleFormFields.system_objects = null;
-      this.addRuleFormFields.actionsGroup = [];
+      this.addPermissionsFormFields.system_objects = null;
+      this.addPermissionsFormFields.actionsGroup = [];
       this.showDialog = true;
     },
 
-    // обработка события закрытия диалога добавления новых правил
-    async onAddRule() {
+    // обработка события закрытия диалога добавления новых разрешений
+    async onAddPermissions() {
       const payload = {
         roleId: this.dsRoles[this.link].id,
-        system_objectIds: this.addRuleFormFields.system_objects.map(item => item.id),
-        actionIds: this.addRuleFormFields.actionsGroup,
+        system_objectIds: this.addPermissionsFormFields.system_objects.map(item => item.id),
+        actionIds: this.addPermissionsFormFields.actionsGroup,
       };
-      const res = this.addRules(payload);
+      const res = this.addPermissions(payload);
       // eslint-disable-next-line no-unused-vars
       res.then((response) => {
         this.$q.notify({
           color: 'positive',
           position: 'top',
-          message: 'Правила успешно созданы.',
+          message: 'Разрешения успешно созданы.',
           icon: 'save',
         });
       })
@@ -367,7 +343,6 @@ export default {
     // смена текущей роли
     async changeActiveRole(index) {
       this.link = index;
-      // await this.loadCurrentRules();
     },
 
     // смена текущей роли
@@ -434,25 +409,6 @@ export default {
         this.setLoading(false);
       });
 
-    // await this.loadCurrentRules();
-
-    // // загрузка правил роли
-    // this.setLoading(true);
-    // await this.getRules(this.dsRoles[this.link].id)
-    //   .catch((err) => {
-    //     const errDescription = this.getErrorDescription('get', err);
-    //     this.addErrorNotification({ message: err.message, description: errDescription });
-    //     this.$q.notify({
-    //       color: 'negative',
-    //       position: 'top',
-    //       message: errDescription,
-    //       icon: 'report_problem',
-    //     });
-    //   })
-    //   .finally(() => {
-    //     this.setLoading(false);
-    //   });
-
     // установка ширины всплывающего сообщения об удалении роли
     this.popoverStyle.minWidth = '400px';
 
@@ -479,7 +435,7 @@ export default {
     this.visibleColumns.unshift('system_object');
 
     // настройка показываемых чекбоксов акций в форме добавления правил
-    this.addRuleFormFields.actionsOptions = this.dsSystemObjectsActions.map(item => ({ label: item.name, value: item.id }));
+    this.addPermissionsFormFields.actionsOptions = this.dsSystemObjectsActions.map(item => ({ label: item.name, value: item.id }));
 
     this.dataReady = true;
   },
