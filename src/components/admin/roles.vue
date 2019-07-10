@@ -109,7 +109,7 @@
                 <template v-if="col.classes === 'as-checkbox'" :props="props">
                   <q-checkbox
                     :value="props.row.viewActions[col.name]"
-                    @input="(val) => onUpdateDocument(val, props.row, col, 'name')"
+                    @input="(val) => onUpdatePermission(val, props.row, col)"
                   />
                 </template>
 
@@ -258,6 +258,7 @@ export default {
       getSystemObjectsActions: 'ds/getSystemObjectsActions',
       getSystemObjects: 'ds/getSystemObjects',
       addPermissions: 'ds/addPermissions',
+      updatePermission: 'ds/updatePermission',
     }),
 
     // валидация формы добавления разрешений роли
@@ -280,12 +281,12 @@ export default {
 
     // обработка события закрытия диалога добавления новых разрешений
     async onAddPermissions() {
-      const payload = {
+      const permData = {
         roleId: this.dsRoles[this.link].id,
         system_objectIds: this.addPermissionsFormFields.system_objects.map(item => item.id),
         actionIds: this.addPermissionsFormFields.actionsGroup,
       };
-      const res = this.addPermissions(payload);
+      const res = this.addPermissions(permData);
       // eslint-disable-next-line no-unused-vars
       res.then((response) => {
         this.$q.notify({
@@ -308,12 +309,42 @@ export default {
         });
     },
 
-    onUpdateDocument(val, row, col, fieldName) {
-      debugger;
-      console.log(val);
-      console.log(row);
-      console.log(col);
-      return fieldName;
+    // изменить разрешение объекта
+    onUpdatePermission(val, row, col) {
+      // найти акцию по имени
+      const action = this.dsSystemObjectsActions.find(a => a.name === col.name);
+
+      const permData = {
+        roleId: this.dsRoles[this.link].id,
+        // permissionId: row.id,
+        system_objectId: row.system_object.id,
+        actionId: action.id,
+        enabled: val,
+      };
+
+      const res = this.updatePermission(permData);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Роль '${response.data.name}' успешно изменена. Объект [${row.system_object.name}]. Действие [${col.name}]`,
+          icon: 'update',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('put', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
+      // debugger;
     },
 
     // обработка события закрытия диалога создания новой роли

@@ -43,15 +43,30 @@ export const deleteRole = async ({ getters, dispatch }, id) => {
 };
 
 // добавить встроенные документы разрешений
-export const addPermissions = async ({ getters, dispatch }, postData) => {
-  const url = getPermissionsUrl(getters, postData.roleId);
+export const addPermissions = async ({ getters, dispatch }, obj) => {
+  const url = getPermissionsUrl(getters, obj.roleId);
   const payload = {
-    system_objectIds: postData.system_objectIds,
-    actionIds: postData.actionIds,
+    system_objectIds: obj.system_objectIds,
+    actionIds: obj.actionIds,
   };
 
   const response = await axios.post(url, payload);
   await dispatch('getRoles');
-  // await dispatch(getAction, postData.roleId);
+  // await dispatch(getAction, obj.roleId);
+  return response;
+};
+
+// изменить разрешение
+export const updatePermission = async ({ getters, dispatch }, obj) => {
+  const url = `${getPermissionsUrl(getters, obj.roleId)}/${obj.system_objectId}`;
+
+  const putData = {
+    actionId: obj.actionId,
+    enabled: obj.enabled,
+  };
+
+  const header = { 'Content-type': 'application/json' };
+  const response = await axios.put(url, putData, { headers: header });
+  await dispatch('getRoles');
   return response;
 };

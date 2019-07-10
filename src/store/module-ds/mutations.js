@@ -102,11 +102,15 @@ export const preparePermissionViewData = (state) => {
       // eslint-disable-next-line no-new-object
       permission.viewActions = new Object();
       arr.forEach((element) => {
-        if (permission.actions.find(action => action.name === element) === undefined) {
+        const action = permission.actions.find(a => a.action.name === element);
+        if (action === undefined) {
           permission.viewActions[element] = false;
         } else {
-          permission.viewActions[element] = true;
+          permission.viewActions[element] = action.enabled;
         }
+        // } else {
+        //   permission.viewActions[element] = true;
+        // }
       });
     });
   });
