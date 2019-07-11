@@ -125,6 +125,15 @@
             </q-input>
           </div>
           <div class="row q-mb-md">
+            <q-input
+              v-model="addFormFields.tag"
+              label="Тэг"
+              :error="$v.addFormFields.tag.$error"
+            >
+              <template v-slot:error>Введите тэг системного объекта.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
             <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
           </div>
         </q-card-section>
@@ -165,6 +174,15 @@ export default {
           classes: 'popup-edit',  // пользовательские классы
         },
         {
+          name: 'tag',
+          required: true,
+          label: 'Тег',
+          align: 'left',
+          field: 'tag',
+          sortable: true,
+          classes: 'popup-edit',
+        },
+        {
           name: 'enabled',
           label: 'Действующий',
           align: 'center',
@@ -183,10 +201,11 @@ export default {
           style: 'width: 80px',
         },
       ],
-      visibleColumns: ['desc', 'enabled', 'rowActions'],
+      visibleColumns: ['desc', 'tag', 'enabled', 'rowActions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name: null,
+        tag: null,
         enabled: true,
       },
       selectData: {},       // буфер для селекта в ячейке таблицы
@@ -197,6 +216,7 @@ export default {
   validations: {
     addFormFields: {
       name: { required, minLength: minLength(3) },
+      tag: { required, minLength: minLength(3) },
     },
   },
 
