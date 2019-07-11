@@ -13,7 +13,7 @@
                 <!-- кнопка добавить Роль -->
                 <q-btn-dropdown outline dense size="sm" icon="add" @click="roleData = ''">
                   <div class="row">
-                    <q-input v-model="roleData" dense clearable autofocus/>
+                    <q-input v-model="roleData" dense clearable autofocus />
                     <q-btn
                       outline
                       dense
@@ -85,9 +85,9 @@
           </q-item>
         </q-list>
       </div>
-      <q-separator vertical class="self-stretch"/>
-      <!-- таблица правил системных объектов -->
-      <div class="col-8">
+      <q-separator vertical class="self-stretch" />
+      <!-- таблица разрешений системных объектов -->
+      <div class="col-9">
         <q-table
           title="Разрешения"
           dense
@@ -98,8 +98,8 @@
         >
           <!-- слот панели кнопок вверху справа -->
           <template v-slot:top-right="props">
-            <!-- кнопка добавления правил для объекта -->
-            <q-btn flat round dense icon="add_box" @click="onShowDialogAddRule"/>
+            <!-- кнопка добавления разрешений для объекта -->
+            <q-btn flat round dense icon="add_box" @click="onShowDialogAddRule" />
           </template>
 
           <!-- слот тела таблицы -->
@@ -113,13 +113,47 @@
                   />
                 </template>
 
+                <template v-else-if="col.name === 'rowActions'" :props="props">
+                  <q-btn round size="xs" icon="delete">
+                    <q-menu
+                      anchor="bottom left"
+                      self="top left"
+                      :content-style="popoverStyle"
+                      @show="showPopover"
+                      auto-close
+                    >
+                      <span id="popover-title">Разрешение выбрано для удаления</span>
+                      <div id="del-buttons">
+                        <q-btn
+                          outliner
+                          rounded
+                          dense
+                          size="form-label-inverted"
+                          color="red-14"
+                          text-color="white"
+                          label="Отменить"
+                        />
+                        <q-btn
+                          outliner
+                          rounded
+                          dense
+                          color="red-4"
+                          text-color="white"
+                          label="Удалить"
+                          @click="onDeletePermission(props.row)"
+                        />
+                      </div>
+                    </q-menu>
+                  </q-btn>
+                </template>
+
                 <template v-else>{{ col.value }}</template>
               </q-td>
             </q-tr>
           </template>
         </q-table>
       </div>
-      <q-separator vertical class="self-stretch"/>
+      <q-separator vertical class="self-stretch" />
       <div class="col">Third column</div>
     </div>
 
@@ -130,19 +164,6 @@
           <div class="text-h6">Добавление нового правила</div>
         </q-card-section>
         <q-card-section>
-          <!-- <div class="row q-mb-md">
-            <q-input
-              v-model="addFormFields.name"
-              autofocus
-              label="Наименование"
-              :error="$v.addFormFields.name.$error"
-            >
-              <template v-slot:error>Введите заказчика.</template>
-            </q-input>
-          </div>
-          <div class="row q-mb-md">
-            <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
-          </div>-->
           <div class="row q-mb-md">
             <q-select
               v-model="addPermissionsFormFields.system_objects"
@@ -167,25 +188,16 @@
               type="checkbox"
             />
           </div>
-          <!-- <div class="row q-mb-md">
-            <q-input
-              v-model="addFormFields.phone_1"
-              :error="$v.addFormFields.phone_1.$error"
-              label="Телефон 1"
-              type="tel"
-              bottom-slots
-            >
-              <template v-slot:before>
-                <q-icon name="phone"/>
-              </template>
-              <template v-slot:error>Ошибка формата номера телефона.</template>
-            </q-input>
-          </div>-->
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Add" @click="validateAndClose" v-close-popup="addPermissionsFormValid"/>
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn
+            flat
+            label="Add"
+            @click="validateAndClose"
+            v-close-popup="addPermissionsFormValid"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -259,6 +271,7 @@ export default {
       getSystemObjects: 'ds/getSystemObjects',
       addPermissions: 'ds/addPermissions',
       updatePermission: 'ds/updatePermission',
+      deletePermission: 'ds/deletePermission',
     }),
 
     // валидация формы добавления разрешений роли
@@ -310,7 +323,7 @@ export default {
     },
 
     // изменить разрешение объекта
-    onUpdatePermission(val, row, col) {
+    async onUpdatePermission(val, row, col) {
       // найти акцию по имени
       const action = this.dsSystemObjectsActions.find(a => a.name === col.name);
 
@@ -344,7 +357,38 @@ export default {
         .finally(() => {
           this.setLoading(false);
         });
-      // debugger;
+    },
+
+    // изменить разрешение объекта
+    async onDeletePermission(row) {
+      const permData = {
+        roleId: this.dsRoles[this.link].id,
+        // permissionId: row.id,
+        system_objectId: row.system_object.id,
+      };
+
+      const res = this.deletePermission(permData);
+      res.then((response) => {
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: `Роль '${response.data.name}' успешно изменена. Удалены разрешения для объекта [${row.system_object.name}].`,
+          icon: 'update',
+        });
+      })
+        .catch((err) => {
+          const errDescription = this.getErrorDescription('put', err);
+          this.addErrorNotification({ message: err.message, description: errDescription });
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: errDescription,
+            icon: 'report_problem',
+          });
+        })
+        .finally(() => {
+          this.setLoading(false);
+        });
     },
 
     // обработка события закрытия диалога создания новой роли
@@ -460,10 +504,19 @@ export default {
       field: row => row.system_object.name,
       sortable: true,         // сортируемый столбец
     });
+    this.columns.push({
+      name: 'rowActions',
+      // label: 'Действия',
+      align: 'right',
+      field: 'rowActions',
+      required: true,
+      style: 'width: 60px',
+    });
 
     // настройка показываемых колонок таблицы
     this.visibleColumns = this.dsSystemObjectsActions.map(item => item.name);
     this.visibleColumns.unshift('system_object');
+    this.visibleColumns.push('rowActions');
 
     // настройка показываемых чекбоксов акций в форме добавления правил
     this.addPermissionsFormFields.actionsOptions = this.dsSystemObjectsActions.map(item => ({ label: item.name, value: item.id }));

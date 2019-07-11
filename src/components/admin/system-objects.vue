@@ -120,6 +120,7 @@
               autofocus
               label="Наименование"
               :error="$v.addFormFields.name.$error"
+              style="width: 240px"
             >
               <template v-slot:error>Введите имя системного объекта.</template>
             </q-input>
@@ -129,6 +130,7 @@
               v-model="addFormFields.tag"
               label="Тэг"
               :error="$v.addFormFields.tag.$error"
+              style="width: 240px"
             >
               <template v-slot:error>Введите тэг системного объекта.</template>
             </q-input>

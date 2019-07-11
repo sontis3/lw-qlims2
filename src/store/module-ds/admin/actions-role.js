@@ -70,3 +70,12 @@ export const updatePermission = async ({ getters, dispatch }, obj) => {
   await dispatch('getRoles');
   return response;
 };
+
+// удалить разрешение
+export const deletePermission = async ({ getters, dispatch }, obj) => {
+  const url = `${getPermissionsUrl(getters, obj.roleId)}/${obj.system_objectId}`;
+
+  const response = await axios.delete(url);
+  await dispatch('getRoles');
+  return response;
+};
