@@ -14,6 +14,11 @@ export const setDsRoles = (state, newDs) => {
   state.dsRoles = newDs;
 };
 
+// Пользователи
+export const setDsUsers = (state, newDs) => {
+  state.dsUsers = newDs;
+};
+
 // Справочники
 // установить новый источник данных Заказчики
 export const setDsCustomers = (state, newDs) => {
@@ -78,6 +83,7 @@ export const cleanOutDs = (state) => {
   state.dsSystemObjects = [];        // Системные объекты
   state.dsSystemObjectsActions = []; // Действия над Системными объектами
   state.dsRoles = [];                // Роли
+  state.dsUsers = [];                // Пользователи
 
   // Справочники
   state.dsCustomers = [];        // Заказчики

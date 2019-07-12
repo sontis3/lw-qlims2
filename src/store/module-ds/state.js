@@ -15,6 +15,7 @@ export default {
   rolesPartUrl: 'roles',
   rulesPartUrl: 'rules',
   permissionsPartUrl: 'permissions',
+  usersPartUrl: 'users',
 
   // справочники
   customersPartUrl: 'customers',
@@ -34,6 +35,7 @@ export default {
   dsSystemObjects: [],        // Системные объекты
   dsSystemObjectsActions: [], // Действия над Системными объектами
   dsRoles: [],                // Роли
+  dsUsers: [],                // Пользователи
 
   // Справочники
   dsCustomers: [],        // Заказчики
