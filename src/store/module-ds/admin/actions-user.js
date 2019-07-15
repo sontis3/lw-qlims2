@@ -3,7 +3,7 @@ import axios from 'axios';
 // помощник для уменьшения редактирования кода
 const getUrl = getters => getters.usersUrl;
 const setDsMutation = 'setDsUsers';
-// const getAction = 'getUsers';
+const getAction = 'getUsers';
 
 // получить полный источник данных
 export const getUsers = async ({ commit, getters }) => {
@@ -32,5 +32,14 @@ export const updateUser = async ({ getters }, obj) => {
 
   const header = { 'Content-type': 'application/json' };
   const response = await axios.put(url, putData, { headers: header });
+  return response;
+};
+
+// удалить документ
+export const deleteUser = async ({ getters, dispatch }, id) => {
+  const url = `${getUrl(getters)}/${id}`;
+
+  const response = await axios.delete(url);
+  await dispatch(getAction);
   return response;
 };

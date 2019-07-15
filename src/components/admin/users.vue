@@ -223,7 +223,7 @@ export default {
           required: true,
           label: 'Роль',
           align: 'left',
-          field: row => row.country.name_ru,
+          field: row => row.role.name,
           rowFieldName: 'role',    // для ссылочных полей указывает на имя поля в строке
           sortable: true,
           classes: 'as-select',
@@ -303,7 +303,7 @@ export default {
     ...mapActions({
       getDocuments: 'ds/getUsers',
       addDocument: 'ds/addCustomer',
-      deleteDocument: 'ds/deleteCustomer',
+      deleteDocument: 'ds/deleteUser',
       updateDocument: 'ds/updateUser',
       getRoles: 'ds/getRoles',
     }),
