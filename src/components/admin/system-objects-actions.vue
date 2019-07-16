@@ -13,14 +13,14 @@
       <!-- слот панели кнопок вверху справа -->
       <template v-slot:top-right="props">
         <!-- кнопка добавления документа -->
-        <q-btn flat round dense icon="add_box" @click="onAddDocument"/>
+        <q-btn flat round dense icon="add_box" @click="onAddDocument" />
         <!-- поиск -->
         <q-input v-model="filter" filled dense type="search" debounce="300" color="secondary">
           <template v-slot:append>
-            <q-icon name="search"/>
+            <q-icon name="search" />
           </template>
         </q-input>
-        <q-space/>
+        <q-space />
         <!-- выбор показываемых столбцов -->
         <q-select
           v-model="visibleColumns"
@@ -64,7 +64,7 @@
                 @show="() => onShowPopup(props.row, col.field)"
                 @save="(val, initval) => { onUpdateDocument(val, props.row, col.field, 'name'); popupEditData = ''; }"
               >
-                <q-input v-model="popupEditData" dense counter autofocus/>
+                <q-input v-model="popupEditData" dense counter autofocus />
               </q-popup-edit>
             </template>
 
@@ -125,13 +125,18 @@
             </q-input>
           </div>
           <div class="row q-mb-md">
-            <q-checkbox v-model="addFormFields.enabled" label="Действующий"/>
+            <q-input v-model="addFormFields.tag" label="Тэг" :error="$v.addFormFields.tag.$error">
+              <template v-slot:error>Введите тэг системного объекта.</template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-checkbox v-model="addFormFields.enabled" label="Действующий" />
           </div>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Add" @click="validateAndClose('name')" v-close-popup="addFormValid"/>
-          <q-btn flat label="Cancel" v-close-popup/>
+          <q-btn flat label="Add" @click="validateAndClose('name')" v-close-popup="addFormValid" />
+          <q-btn flat label="Cancel" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -165,6 +170,15 @@ export default {
           classes: 'popup-edit',  // пользовательские классы
         },
         {
+          name: 'tag',
+          required: true,
+          label: 'Тег',
+          align: 'left',
+          field: 'tag',
+          sortable: true,
+          classes: 'popup-edit',
+        },
+        {
           name: 'enabled',
           label: 'Действующий',
           align: 'center',
@@ -183,10 +197,11 @@ export default {
           style: 'width: 80px',
         },
       ],
-      visibleColumns: ['desc', 'enabled', 'rowActions'],
+      visibleColumns: ['desc', 'tag', 'enabled', 'rowActions'],
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name: null,
+        tag: null,
         enabled: true,
       },
       selectData: {},       // буфер для селекта в ячейке таблицы
@@ -197,6 +212,7 @@ export default {
   validations: {
     addFormFields: {
       name: { required, minLength: minLength(3) },
+      tag: { required, minLength: minLength(3) },
     },
   },
 

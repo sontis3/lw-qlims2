@@ -24,6 +24,7 @@ export const addSystemObjectAction = async ({ getters, dispatch }, obj) => {
 
   const postData = {
     name: obj.name,
+    tag: obj.tag,
     enabled: obj.enabled,
   };
 
@@ -47,6 +48,7 @@ export const updateSystemObjectAction = async ({ getters }, obj) => {
 
   const putData = {
     name: obj.name,
+    tag: obj.tag,
     enabled: obj.enabled,
   };
 
