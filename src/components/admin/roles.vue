@@ -11,9 +11,22 @@
             <q-item-section side>
               <q-btn-group outline stretch spread>
                 <!-- кнопка добавить Роль -->
-                <q-btn-dropdown outline dense size="sm" icon="add" @click="roleData = ''">
-                  <div class="row">
-                    <q-input v-model="roleData" dense clearable autofocus />
+                <q-btn-dropdown
+                  outline
+                  dense
+                  size="sm"
+                  icon="add"
+                  @click="roleData={name:'',tag:'',}"
+                >
+                  <div class="col">
+                    <q-input
+                      v-model="roleData.name"
+                      label="Наименование"
+                      dense
+                      clearable
+                      autofocus
+                    />
+                    <q-input v-model="roleData.tag" label="Тег" dense clearable />
                     <q-btn
                       outline
                       dense
@@ -23,6 +36,7 @@
                       @click="onAddRole"
                       v-close-popup
                     />
+                    <q-btn outline dense size="sm" color="primary" label="Cancel" v-close-popup />
                   </div>
                 </q-btn-dropdown>
               </q-btn-group>
@@ -40,9 +54,9 @@
           >
             <q-item-section>
               <q-item-label>{{item.name}}</q-item-label>
-            </q-item-section>
+            <!-- </q-item-section> -->
             <!-- кнопка удалить Роль -->
-            <q-item-section side>
+            <!-- <q-item-section side> -->
               <q-btn
                 class="text-grey-8 q-gutter-x-xs"
                 flat
@@ -156,8 +170,8 @@
           </template>
         </q-table>
       </div>
-      <q-separator vertical class="self-stretch" />
-      <div class="col">Third column</div>
+      <!-- <q-separator vertical class="self-stretch" />
+      <div class="col">Third column</div> -->
     </div>
 
     <!-- Диалог добавления правила -->
@@ -225,7 +239,10 @@ export default {
   data() {
     return {
       dataReady: false,           // флаг готовности данных для показа
-      roleData: '',               // поле для добавления роли
+      roleData: {                 // поле для добавления роли
+        name: '',
+        tag: '',
+      },
       link: 0,                    // индекс выбранной роли в списке
 
       columns: [],                // колонки таблицы разрешений

@@ -20,11 +20,12 @@ export const getRoles = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addRole = async ({ getters, dispatch }, roleName) => {
+export const addRole = async ({ getters, dispatch }, obj) => {
   const url = getUrl(getters);
 
   const postData = {
-    name: roleName,
+    name: obj.name,
+    tag: obj.tag,
     enabled: true,
   };
 
