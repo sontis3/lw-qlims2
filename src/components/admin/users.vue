@@ -7,6 +7,7 @@
       :data="ds"
       :filter="filter"
       :loading="isLoading"
+      :pagination.sync="pagination"
       dense
       separator="cell"
     >
@@ -84,6 +85,7 @@
 
             <template v-else-if="col.name === 'rowActions'" :props="props">
               <q-btn round size="xs" icon="delete">
+                <q-tooltip>Удаление документа</q-tooltip>
                 <q-menu
                   anchor="bottom left"
                   self="top left"
@@ -261,6 +263,9 @@ export default {
         },
       ],
       visibleColumns: ['desc', 'enabled', 'role', 'email', 'createdAt', 'updatedAt', 'rowActions'],
+      pagination: {
+        rowsPerPage: 10,
+      },
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name: null,
@@ -268,7 +273,6 @@ export default {
         role: null,
         email: '123@456.com',
       },
-      selectData: {},       // буфер для селекта в ячейке таблицы
     };
   },
 

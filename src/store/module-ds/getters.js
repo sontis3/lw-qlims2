@@ -5,6 +5,7 @@ export const systemObjectActionsUrl = state => `${state.apiUrl}/${state.adminPar
 export const rolesUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.rolesPartUrl}`;
 export const permissionsUrl = (state, getters) => roleId => `${getters.rolesUrl}/${roleId}/${state.permissionsPartUrl}`;
 export const usersUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.usersPartUrl}`;
+export const collectionsUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.collectionsPartUrl}`;
 
 // адреса справочников
 export const customersUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.customersPartUrl}`;

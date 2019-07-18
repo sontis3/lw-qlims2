@@ -52,6 +52,7 @@
                 icon="delete"
                 @click.stop="changeActiveRole(index)"
               >
+                <q-tooltip>Удаление роли</q-tooltip>
                 <q-menu
                   anchor="bottom left"
                   self="top left"
@@ -95,6 +96,7 @@
           :columns="columns"
           :visibleColumns="visibleColumns"
           :data="dsRoles.length != 0 ? dsRoles[link].permissions : []"
+          :pagination.sync="pagination"
         >
           <!-- слот панели кнопок вверху справа -->
           <template v-slot:top-right="props">
@@ -115,6 +117,7 @@
 
                 <template v-else-if="col.name === 'rowActions'" :props="props">
                   <q-btn round size="xs" icon="delete">
+                    <q-tooltip>Удаление разрешения</q-tooltip>
                     <q-menu
                       anchor="bottom left"
                       self="top left"
@@ -227,6 +230,9 @@ export default {
 
       columns: [],                // колонки таблицы разрешений
       visibleColumns: [],
+      pagination: {
+        rowsPerPage: 10,
+      },
       showDialog: false,          // показать/скрыть диалог добавления
       addPermissionsFormFields: {        // поля формы добавления разрешений
         system_objects: null,     // массив системных объектов, для кот. добавляются разрешения

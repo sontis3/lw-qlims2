@@ -16,6 +16,7 @@ export default {
   rulesPartUrl: 'rules',
   permissionsPartUrl: 'permissions',
   usersPartUrl: 'users',
+  collectionsPartUrl: 'collections',
 
   // справочники
   customersPartUrl: 'customers',

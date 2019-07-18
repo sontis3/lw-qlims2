@@ -7,6 +7,7 @@
       :data="ds1"
       :filter="filter"
       :loading="isLoading"
+      :pagination.sync="pagination"
       dense
       separator="cell"
     >
@@ -75,6 +76,7 @@
           <q-td key="rowActions" :props="props">
             <!-- <q-btn round size="xs" icon="edit" @click="onEditDocument(props.row)"/> -->
             <q-btn v-if="abilityDS.can('delete', 'Country')" round size="xs" icon="delete">
+              <q-tooltip>Удаление документа</q-tooltip>
               <q-menu
                 anchor="bottom left"
                 self="top left"
@@ -222,6 +224,9 @@ export default {
 
       ],
       visibleColumns: ['desc_ru', 'desc_en', 'enabled', 'rowActions'],
+      pagination: {
+        rowsPerPage: 10,
+      },
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа
         name_ru: null,

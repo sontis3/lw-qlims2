@@ -10,6 +10,7 @@ const routes = [
       { path: 'admin/system-objects-actions', name: 'SystemObjectsActions', component: () => import('components/admin/system-objects-actions') },
       { path: 'admin/roles', name: 'Roles', component: () => import('components/admin/roles') },
       { path: 'admin/users', name: 'Users', component: () => import('components/admin/users') },
+      { path: 'admin/collections', name: 'Collections', component: () => import('components/admin/collections') },
 
       { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
       { path: 'directory/countries', name: 'Countries', component: () => import('components/directory/countries') },
