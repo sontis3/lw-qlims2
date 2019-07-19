@@ -64,7 +64,6 @@
                 @input="(val) => onUpdateDocument(val, props.row, col.rowFieldName, 'name')"
                 option-value="id"
                 option-label="name"
-                style="width: 120px"
                 filled
                 dense
                 options-dense
