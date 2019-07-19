@@ -355,7 +355,7 @@ export default {
         // permissionId: row.id,
         system_objectId: row.system_object.id,
         actionId: action.id,
-        enabled: val,
+        granted: val,
       };
 
       const res = this.updatePermission(permData);

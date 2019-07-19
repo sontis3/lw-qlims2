@@ -63,7 +63,7 @@ export const updatePermission = async ({ getters, dispatch }, obj) => {
 
   const putData = {
     actionId: obj.actionId,
-    enabled: obj.enabled,
+    granted: obj.granted,
   };
 
   const header = { 'Content-type': 'application/json' };

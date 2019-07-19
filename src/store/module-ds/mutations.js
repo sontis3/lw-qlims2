@@ -112,7 +112,7 @@ export const preparePermissionViewData = (state) => {
         if (action === undefined) {
           permission.viewActions[element] = false;
         } else {
-          permission.viewActions[element] = action.enabled;
+          permission.viewActions[element] = action.granted;
         }
         // } else {
         //   permission.viewActions[element] = true;
