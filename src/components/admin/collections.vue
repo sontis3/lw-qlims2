@@ -160,7 +160,7 @@ export default {
       ],
       visibleColumns: ['desc', 'rowActions'],
       pagination: {
-        rowsPerPage: 10,
+        rowsPerPage: 8,
       },
       filter: '',         // фильтр таблицы
     };

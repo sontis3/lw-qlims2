@@ -263,7 +263,7 @@ export default {
       ],
       visibleColumns: ['desc', 'enabled', 'role', 'email', 'createdAt', 'updatedAt', 'rowActions'],
       pagination: {
-        rowsPerPage: 10,
+        rowsPerPage: 8,
       },
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа

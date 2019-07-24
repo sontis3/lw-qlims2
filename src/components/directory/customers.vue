@@ -342,7 +342,7 @@ export default {
       visibleColumns: ['desc', 'enabled', 'country', 'zip_code', 'city', 'region', 'address_line_1', 'address_line_2', 'address_line_3',
         'email', 'phone_1', 'createdAt', 'updatedAt', 'rowActions'],
       pagination: {
-        rowsPerPage: 10,
+        rowsPerPage: 8,
       },
       filter: '',         // фильтр таблицы
       addFormFields: {    // поля формы добавления документа

@@ -248,7 +248,7 @@ export default {
       columns: [],                // колонки таблицы разрешений
       visibleColumns: [],
       pagination: {
-        rowsPerPage: 10,
+        rowsPerPage: 8,
       },
       showDialog: false,          // показать/скрыть диалог добавления
       addPermissionsFormFields: {        // поля формы добавления разрешений
