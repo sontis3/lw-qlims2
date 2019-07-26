@@ -75,7 +75,7 @@
 
           <q-td key="rowActions" :props="props">
             <!-- <q-btn round size="xs" icon="edit" @click="onEditDocument(props.row)"/> -->
-            <q-btn v-if="abilityDS.can('delete', 'Country')" round size="xs" icon="delete">
+            <q-btn v-if="abilityDS.can('delete', 'country')" round size="xs" icon="delete">
               <q-tooltip>Удаление документа</q-tooltip>
               <q-menu
                 anchor="bottom left"

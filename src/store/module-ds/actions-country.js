@@ -4,9 +4,16 @@ import axios from 'axios';
 const getUrl = getters => getters.countriesUrl;
 const setDsMutation = 'setDsCountries';
 const getAction = 'getCountries';
+const sysObject = 'country';          // название сист. объекта
 
 // получить полный источник данных
 export const getCountries = async ({ commit, getters }) => {
+  // проверка разрешений
+  if (!getters.isGranted('read', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const response = await axios.get(url)
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
@@ -19,25 +26,41 @@ export const getCountries = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addCountry = async ({ getters, dispatch }, obj) => {
-  const url = getUrl(getters);
+export const addCountry = async ({ commit, getters, dispatch }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('create', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = getUrl(getters);
   const response = await axios.post(url, obj);
   await dispatch(getAction);
   return response;
 };
 
 // удалить документ
-export const deleteCountry = async ({ getters, dispatch }, id) => {
-  const url = `${getUrl(getters)}/${id}`;
+export const deleteCountry = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${id}`;
   const response = await axios.delete(url);
   await dispatch(getAction);
   return response;
 };
 
 // изменить документ
-export const updateCountry = async ({ getters }, obj) => {
+export const updateCountry = async ({ commit, getters }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('update', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = `${getUrl(getters)}/${obj.id}`;
 
   const putData = {

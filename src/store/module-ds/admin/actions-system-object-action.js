@@ -4,9 +4,16 @@ import axios from 'axios';
 const getUrl = getters => getters.systemObjectActionsUrl;
 const setDsMutation = 'setDsSystemObjectsActions';
 const getAction = 'getSystemObjectsActions';
+const sysObject = 'systemObjectAction';          // название сист. объекта
 
 // получить полный источник данных
 export const getSystemObjectsActions = async ({ commit, getters }) => {
+  // проверка разрешений
+  if (!getters.isGranted('read', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const response = await axios.get(url)
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
@@ -19,9 +26,14 @@ export const getSystemObjectsActions = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addSystemObjectAction = async ({ getters, dispatch }, obj) => {
-  const url = getUrl(getters);
+export const addSystemObjectAction = async ({ commit, getters, dispatch }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('create', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = getUrl(getters);
   const postData = {
     name: obj.name,
     tag: obj.tag,
@@ -34,18 +46,28 @@ export const addSystemObjectAction = async ({ getters, dispatch }, obj) => {
 };
 
 // удалить документ
-export const deleteSystemObjectAction = async ({ getters, dispatch }, id) => {
-  const url = `${getUrl(getters)}/${id}`;
+export const deleteSystemObjectAction = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${id}`;
   const response = await axios.delete(url);
   await dispatch(getAction);
   return response;
 };
 
 // изменить документ
-export const updateSystemObjectAction = async ({ getters }, obj) => {
-  const url = `${getUrl(getters)}/${obj.id}`;
+export const updateSystemObjectAction = async ({ commit, getters }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('update', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${obj.id}`;
   const putData = {
     name: obj.name,
     tag: obj.tag,

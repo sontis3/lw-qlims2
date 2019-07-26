@@ -26,12 +26,19 @@ export const DeletePopover = {
       this.setLoading(true);
       const res = deleteFunc(id);
       res.then((response) => {
+        let msg = 'Действие отменено. Не хватает прав на выполнение!';
+        let clr = 'negative';
+        if (response !== null) {
+          msg = `Документ '${response.data[fieldName]}' успешно удален.`;
+          clr = 'positive';
+        }
         this.$q.notify({
-          color: 'positive',
+          color: clr,
           position: 'top',
-          message: `Документ '${response.data[fieldName]}' успешно удален.`,
+          message: msg,
           icon: 'delete',
         });
+        this.getDocuments();
       })
         .catch((err) => {
           const errDescription = this.getErrorDescription('delete', err);

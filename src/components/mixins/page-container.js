@@ -19,12 +19,19 @@ export const PageContainer = {
     async onAdd(fieldName) {
       const res = this.addDocument(this.addFormFields);
       res.then((response) => {
+        let msg = 'Действие отменено. Не хватает прав на выполнение!';
+        let clr = 'negative';
+        if (response !== null) {
+          msg = `Документ '${response.data[fieldName]}' успешно создан.`;
+          clr = 'positive';
+        }
         this.$q.notify({
-          color: 'positive',
+          color: clr,
           position: 'top',
-          message: `Документ '${response.data[fieldName]}' успешно создан.`,
+          message: msg,
           icon: 'save',
         });
+        this.getDocuments();
       })
         .catch((err) => {
           const errDescription = this.getErrorDescription('post', err);
@@ -47,10 +54,16 @@ export const PageContainer = {
       updatedRow[col] = val;
       const res = this.updateDocument(updatedRow);
       res.then((response) => {
+        let msg = 'Действие отменено. Не хватает прав на выполнение!';
+        let clr = 'negative';
+        if (response !== null) {
+          msg = `Документ '${response.data[fieldName]}' успешно изменен. Поле [${col}]`;
+          clr = 'positive';
+        }
         this.$q.notify({
-          color: 'positive',
+          color: clr,
           position: 'top',
-          message: `Документ '${response.data[fieldName]}' успешно изменен. Поле [${col}]`,
+          message: msg,
           icon: 'update',
         });
         this.getDocuments();

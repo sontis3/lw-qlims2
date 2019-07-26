@@ -1,3 +1,5 @@
+import { Ability } from '@casl/ability';
+
 function range(start, end) {
   return Array(end - start + 1).fill().map((_, idx) => (start + idx).toString());
 }
@@ -58,7 +60,7 @@ export default {
   userData: null,
 
   // объект управления авторизацией
-  ability: null, // new Ability(),
+  ability: new Ability(),
 
   // удостоверения
   // credentials: [

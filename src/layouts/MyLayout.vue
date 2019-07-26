@@ -206,7 +206,6 @@ import {
   email,
   sameAs,
 } from 'vuelidate/lib/validators';
-import { Ability } from '@casl/ability';
 
 export default {
   name: 'MyLayout',
@@ -312,6 +311,7 @@ export default {
       return true;
     },
 
+    // выход пользователя
     onLogout() {
       this.cleanOutDs();
       this.logout();
@@ -395,8 +395,6 @@ export default {
   },
 
   mounted() {
-    const ab = new Ability();
-    this.setAbility(ab);
     this.selectedNode = this.selectedActionId;
     // this.$refs.actionsTree.setExpanded(this.selectedNode, 'true');
     this.$router.push({ name: this.selectedActionId });

@@ -4,9 +4,16 @@ import axios from 'axios';
 const getUrl = getters => getters.systemObjectsUrl;
 const setDsMutation = 'setDsSystemObjects';
 const getAction = 'getSystemObjects';
+const sysObject = 'systemObject';          // название сист. объекта
 
 // получить полный источник данных
 export const getSystemObjects = async ({ commit, getters }) => {
+  // проверка разрешений
+  if (!getters.isGranted('read', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const response = await axios.get(url)
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
@@ -19,9 +26,14 @@ export const getSystemObjects = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addSystemObject = async ({ getters, dispatch }, obj) => {
-  const url = getUrl(getters);
+export const addSystemObject = async ({ commit, getters, dispatch }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('create', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = getUrl(getters);
   const postData = {
     name: obj.name,
     tag: obj.tag,
@@ -34,18 +46,28 @@ export const addSystemObject = async ({ getters, dispatch }, obj) => {
 };
 
 // удалить документ
-export const deleteSystemObject = async ({ getters, dispatch }, id) => {
-  const url = `${getUrl(getters)}/${id}`;
+export const deleteSystemObject = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${id}`;
   const response = await axios.delete(url);
   await dispatch(getAction);
   return response;
 };
 
 // изменить документ
-export const updateSystemObject = async ({ getters }, obj) => {
-  const url = `${getUrl(getters)}/${obj.id}`;
+export const updateSystemObject = async ({ commit, getters }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('update', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${obj.id}`;
   const putData = {
     name: obj.name,
     tag: obj.tag,

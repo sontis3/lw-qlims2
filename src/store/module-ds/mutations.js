@@ -1,3 +1,5 @@
+import { Ability } from '@casl/ability';
+
 // Администрирование
 // Системные объекты
 export const setDsSystemObjects = (state, newDs) => {
@@ -75,6 +77,7 @@ import axios from 'axios';
 export const logout = (state) => {
   state.userData = null;
   axios.defaults.headers.common.Authorization = '';
+  state.ability.update([]);
 };
 
 // очистить источники данных
@@ -91,11 +94,12 @@ export const cleanOutDs = (state) => {
   state.dsCountries = [];        // Страны
 };
 
-// установка конфигурации авторизации
-export const setAbility = (state, obj) => {
-  state.ability = obj;
+// создание конфигурации авторизации
+export const setAbility = (state) => {
+  state.ability = new Ability();
 };
 
+// установить новые правила конфигурации авторизации
 export const updateAbility = (state, obj) => {
   state.ability.update(obj);
 };

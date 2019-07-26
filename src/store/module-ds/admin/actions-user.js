@@ -4,9 +4,16 @@ import axios from 'axios';
 const getUrl = getters => getters.usersUrl;
 const setDsMutation = 'setDsUsers';
 const getAction = 'getUsers';
+const sysObject = 'user';          // название сист. объекта
 
 // получить полный источник данных
 export const getUsers = async ({ commit, getters }) => {
+  // проверка разрешений
+  if (!getters.isGranted('read', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const response = await axios.get(url)
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
@@ -19,7 +26,13 @@ export const getUsers = async ({ commit, getters }) => {
 };
 
 // изменить документ
-export const updateUser = async ({ getters }, obj) => {
+export const updateUser = async ({ commit, getters }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('update', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = `${getUrl(getters)}/${obj.id}`;
   const roleObjId = obj.role ? obj.role.id : null;
 
@@ -36,9 +49,14 @@ export const updateUser = async ({ getters }, obj) => {
 };
 
 // удалить документ
-export const deleteUser = async ({ getters, dispatch }, id) => {
-  const url = `${getUrl(getters)}/${id}`;
+export const deleteUser = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${id}`;
   const response = await axios.delete(url);
   await dispatch(getAction);
   return response;

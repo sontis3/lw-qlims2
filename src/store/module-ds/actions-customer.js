@@ -4,9 +4,16 @@ import axios from 'axios';
 const getUrl = getters => getters.customersUrl;
 const setDsMutation = 'setDsCustomers';
 const getAction = 'getCustomers';
+const sysObject = 'customer';          // название сист. объекта
 
 // получить полный источник данных
 export const getCustomers = async ({ commit, getters }) => {
+  // проверка разрешений
+  if (!getters.isGranted('read', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const response = await axios.get(url)
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
@@ -19,7 +26,13 @@ export const getCustomers = async ({ commit, getters }) => {
 };
 
 // добавить документ
-export const addCustomer = async ({ getters, dispatch }, obj) => {
+export const addCustomer = async ({ commit, getters, dispatch }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('create', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = getUrl(getters);
   const countryObjId = obj.country ? obj.country.id : null;
 
@@ -37,16 +50,27 @@ export const addCustomer = async ({ getters, dispatch }, obj) => {
 };
 
 // удалить документ
-export const deleteCustomer = async ({ getters, dispatch }, id) => {
-  const url = `${getUrl(getters)}/${id}`;
+export const deleteCustomer = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
 
+  const url = `${getUrl(getters)}/${id}`;
   const response = await axios.delete(url);
   await dispatch(getAction);
   return response;
 };
 
 // изменить документ
-export const updateCustomer = async ({ getters }, obj) => {
+export const updateCustomer = async ({ commit, getters }, obj) => {
+  // проверка разрешений
+  if (!getters.isGranted('update', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
   const url = `${getUrl(getters)}/${obj.id}`;
   const countryObjId = obj.country ? obj.country.id : null;
 
@@ -65,13 +89,13 @@ export const updateCustomer = async ({ getters }, obj) => {
 
 // добавочные специализированные акции
 // получить источник данных (имя, ид объекта)
-export const getShortEnabledCustomers = async ({ commit, getters }) => {
-  const url = getUrl(getters);
-  const resp = await axios.get(url, { params: { enabled: true, short: true } })
-    .then((rawResponse) => {
-      const response = rawResponse.data.map(item => ({ label: item.name, value: item.id }));
-      commit('setDsShortCustomers', response);
-      return response;
-    });
-  return resp;
-};
+// export const getShortEnabledCustomers = async ({ commit, getters }) => {
+//   const url = getUrl(getters);
+//   const resp = await axios.get(url, { params: { enabled: true, short: true } })
+//     .then((rawResponse) => {
+//       const response = rawResponse.data.map(item => ({ label: item.name, value: item.id }));
+//       commit('setDsShortCustomers', response);
+//       return response;
+//     });
+//   return resp;
+// };

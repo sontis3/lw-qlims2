@@ -1,3 +1,4 @@
+
 // получить адреса сервисов web API
 // адреса админки
 export const systemObjectsUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${state.systemObjectsPartUrl}`;
@@ -32,3 +33,29 @@ export const getRoleNotUsedSystemObjects = state => (index) => {
 
 // получить действующие роли
 export const getEnabledRoles = state => state.dsRoles.filter(el => el.enabled);
+
+// проверка прав
+// action - действие
+// sysObject - системный объект
+export const isGranted = state => (action, sysObject) => {
+  let subjArr;
+  switch (sysObject) {
+    case 'systemObject':
+    case 'systemObjectAction':
+    case 'role':
+    case 'role.permission':
+    case 'user':
+      subjArr = ['all', 'allAdministration', sysObject];
+      break;
+    case 'customer':
+    case 'country':
+      subjArr = ['all', 'allDirectories', sysObject];
+      break;
+
+    default:
+      subjArr = ['all', 'allCatalogs', sysObject];
+      break;
+  }
+
+  return subjArr.reduce((res, currentItem) => res || state.ability.can(action, currentItem), false);
+};
