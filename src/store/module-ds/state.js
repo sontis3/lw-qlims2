@@ -1,8 +1,8 @@
 import { Ability } from '@casl/ability';
 
-function range(start, end) {
-  return Array(end - start + 1).fill().map((_, idx) => (start + idx).toString());
-}
+// function range(start, end) {
+//   return Array(end - start + 1).fill().map((_, idx) => (start + idx).toString());
+// }
 
 export default {
   // адреса web API
@@ -51,7 +51,7 @@ export default {
   // dsMasterSchedules: {},  // План-график исследований (именем свойства является номер года)
 
   // годы
-  dsYears: range(2016, (new Date()).getFullYear() + 1),
+  // dsYears: range(2018, (new Date()).getFullYear() + 1),
 
   // индикатор загрузки данных
   isLoading: false,

@@ -1,7 +1,8 @@
-export default {
-  // текущая выбранная акция
-  selectedActionId: 'Customers',
+function range(start, end) {
+  return Array(end - start + 1).fill().map((_, idx) => (start + idx).toString());
+}
 
+export default {
   // данные для шаблона дерева акций
   treeActionsTemplate: [
     {
@@ -30,7 +31,13 @@ export default {
       label: 'Реестры',
       selectable: false,
       children: [
-        { id: 'MasterSchedules', label: 'План-график исследований', lazy: true },
+        {
+          id: 'MasterSchedules',
+          label: 'План-график исследований',
+          selectable: false,
+          // lazy: true,
+          children: range(2018, (new Date()).getFullYear() + 1).map(item => ({ id: `MasterSchedules.${item}`, label: item })),
+        },
         { id: 'StandardSamples', label: 'Реестр стандартных образцов', lazy: true },
       ],
     },

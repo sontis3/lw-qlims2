@@ -1,6 +1,3 @@
-// мутация смены текущей акции
-export const changeSelectedAction = (state, newAction) => { state.selectedActionId = newAction; };
-
 // сохранение уведомления об ошибке
 export const addErrorNotification = (state, obj) => {
   const errNotification = {

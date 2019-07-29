@@ -251,14 +251,13 @@ export default {
     ...mapState({
       currentMode: state => state.appMode.currentMode,
       errorNotifications: state => state.appMode.errorNotifications,
-      selectedActionId: state => state.appMode.selectedActionId,
       userData: state => state.ds.userData,
       abilityDS: state => state.ds.ability,
+      actionsTreeData: state => state.appMode.treeActionsTemplate,
     }),
     ...mapGetters({
       currentActionsList: 'appMode/currentActionsList',
       currentAction: 'appMode/currentAction',
-      actionsTreeData: 'appMode/getActionsTreeData',
       getErrorDescription: 'appMode/getErrorDescription',
     }),
 
@@ -282,7 +281,6 @@ export default {
     openURL,
 
     ...mapMutations({
-      changeSelectedAction: 'appMode/changeSelectedAction',
       addErrorNotification: 'appMode/addErrorNotification',
       deleteErrorNotification: 'appMode/deleteErrorNotification',
       logout: 'ds/logout',
@@ -297,8 +295,12 @@ export default {
 
     // выбрана акция в дереве
     actionNodeSelected(target) {
-      this.changeSelectedAction(target);
-      this.$router.push({ name: this.selectedActionId });
+      const routeArr = target.split('.');
+      if (routeArr[0] === 'MasterSchedules') {
+        this.$router.push({ name: routeArr[0], params: { year: routeArr[1] } });
+      } else {
+        this.$router.push({ name: routeArr[0] });
+      }
       console.log(target);
     },
 
@@ -395,9 +397,8 @@ export default {
   },
 
   mounted() {
-    this.selectedNode = this.selectedActionId;
     // this.$refs.actionsTree.setExpanded(this.selectedNode, 'true');
-    this.$router.push({ name: this.selectedActionId });
+    this.$router.push({ name: 'Customers' });
   },
 };
 </script>

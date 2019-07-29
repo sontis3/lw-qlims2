@@ -1,6 +1,3 @@
-// получить данные для построения дерева акций
-export const getActionsTreeData = state => state.treeActionsTemplate;
-
 // сформировать сообщение об ошибке от сервера
 /* eslint no-unused-vars: ["error", { "args": "none" }] */
 export const getErrorDescription = state => (httpMethod, err) => {
@@ -17,5 +14,3 @@ export const getErrorDescription = state => (httpMethod, err) => {
 
   return ErrorDescription;
 };
-
-export { getActionsTreeData as default };
