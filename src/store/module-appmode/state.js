@@ -79,5 +79,8 @@ export default {
     {
       name: 'Страны', tag: 'country', canDropCollection: false, canRestoreCollection: false,
     },
+    {
+      name: 'Лекарственные формы', tag: 'dosageForm', canDropCollection: true, canRestoreCollection: true,
+    },
   ],
 };

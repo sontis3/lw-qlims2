@@ -49,6 +49,7 @@ export const isGranted = state => (action, sysObject) => {
       break;
     case 'customer':
     case 'country':
+    case 'dosageForm':
       subjArr = ['all', 'allDirectories', sysObject];
       break;
 
