@@ -14,6 +14,7 @@ const routes = [
 
       { path: 'directory/customers', name: 'Customers', component: () => import('components/directory/customers') },
       { path: 'directory/countries', name: 'Countries', component: () => import('components/directory/countries') },
+      { path: 'directory/manufacturers', name: 'Manufacturers', component: () => import('components/directory/manufacturers') },
       // { path: 'directory/test-objects', name: 'TestObjects', component: () => import('components/directory/test-objects') },
       // { path: 'directory/delivery-methods', name: 'DeliveryMethods', component: () => import('components/directory/delivery-methods') },
       // { path: 'directory/couriers', name: 'Couriers', redirect: '' },

@@ -24,6 +24,7 @@ export default {
       children: [
         { id: 'Customers', label: 'Заказчики' },
         { id: 'Countries', label: 'Страны' },
+        { id: 'Manufacturers', label: 'Производители' },
       ],
     },
     {
@@ -81,6 +82,9 @@ export default {
     },
     {
       name: 'Лекарственные формы', tag: 'dosageForm', canDropCollection: true, canRestoreCollection: true,
+    },
+    {
+      name: 'Производители', tag: 'manufacturer', canDropCollection: true, canRestoreCollection: true,
     },
   ],
 };

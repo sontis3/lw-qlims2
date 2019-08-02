@@ -23,6 +23,7 @@ export default {
   // справочники
   customersPartUrl: 'customers',
   countriesPartUrl: 'countries',
+  manufacturersPartUrl: 'manufacturers',
 
   testObjectsPartUrl: 'test-objects',
   deliveryMethodsPartUrl: 'delivery-methods',
@@ -44,6 +45,7 @@ export default {
   dsCustomers: [],        // Заказчики
   dsShortCustomers: [],   // Заказчики для QSelect
   dsCountries: [],        // Страны
+  dsManufacturers: [],    // Производители
 
   // dsTestObjects: [],      // Тестируемые объекты
   // dsShortTestObjects: [], // Тестируемые объекты для QSelect

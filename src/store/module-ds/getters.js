@@ -11,6 +11,7 @@ export const collectionsUrl = state => `${state.apiUrl}/${state.adminPartUrl}/${
 // адреса справочников
 export const customersUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.customersPartUrl}`;
 export const countriesUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.countriesPartUrl}`;
+export const manufacturersUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.manufacturersPartUrl}`;
 
 export const testObjectsUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.testObjectsPartUrl}`;
 export const deliveryMethodsUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.deliveryMethodsPartUrl}`;
@@ -50,6 +51,7 @@ export const isGranted = state => (action, sysObject) => {
     case 'customer':
     case 'country':
     case 'dosageForm':
+    case 'manufacturer':
       subjArr = ['all', 'allDirectories', sysObject];
       break;
 

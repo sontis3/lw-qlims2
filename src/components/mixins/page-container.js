@@ -4,7 +4,7 @@ export const PageContainer = {
   data() {
     return {
       showDialog: false,    // показать/скрыть диалог добавления
-      popupEditData: '',    // буфер для всплывающего редактора
+      popupEditData: '.',   // буфер для всплывающего редактора (. для установки начального значения)
       addFormValid: true,   // форма добавления документа валидна?
     };
   },
@@ -48,6 +48,7 @@ export const PageContainer = {
 
     // изменить документ
     onUpdateDocument(val, row, col, fieldName) {
+      // debugger;
       this.setLoading(true);
       // создание копии и её изменение
       const updatedRow = extend({}, row);
@@ -85,6 +86,7 @@ export const PageContainer = {
 
     // заполнение буфера всплывающего редактора данными из vuex таблицы
     onShowPopup(row, col) {
+      // debugger;
       this.popupEditData = row[col];
     },
 

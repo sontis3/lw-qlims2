@@ -36,6 +36,11 @@ export const setDsCountries = (state, newDs) => {
   state.dsCountries = newDs;
 };
 
+// установить новый источник данных Производители
+export const setDsManufacturers = (state, newDs) => {
+  state.dsManufacturers = newDs;
+};
+
 // установить новый источник данных Тестируемые объекты
 export const setDsTestObjects = (state, newDs) => {
   state.dsTestObjects = newDs;
@@ -92,6 +97,7 @@ export const cleanOutDs = (state) => {
   state.dsCustomers = [];        // Заказчики
   state.dsShortCustomers = [];   // Заказчики для QSelect
   state.dsCountries = [];        // Страны
+  state.dsManufacturers = [];    // Производители
 };
 
 // создание конфигурации авторизации
