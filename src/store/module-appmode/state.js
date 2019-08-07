@@ -78,7 +78,7 @@ export default {
       name: 'Заказчики', tag: 'customer', canDropCollection: false, canRestoreCollection: false,
     },
     {
-      name: 'Страны', tag: 'country', canDropCollection: false, canRestoreCollection: false,
+      name: 'Страны', tag: 'country', canDropCollection: true, canRestoreCollection: true,
     },
     {
       name: 'Лекарственные формы', tag: 'dosageForm', canDropCollection: true, canRestoreCollection: true,
