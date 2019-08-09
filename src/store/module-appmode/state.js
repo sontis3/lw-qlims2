@@ -33,6 +33,13 @@ export default {
       selectable: false,
       children: [
         {
+          id: 'Contracts',
+          label: 'Договоры',
+          selectable: false,
+          // lazy: true,
+          children: range(2018, (new Date()).getFullYear() + 1).map(item => ({ id: `Contracts.${item}`, label: item })),
+        },
+        {
           id: 'MasterSchedules',
           label: 'План-график исследований',
           selectable: false,

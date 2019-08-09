@@ -55,6 +55,11 @@ export const setDsDeliveryMethods = (state, newDs) => {
   state.dsDeliveryMethods = newDs;
 };
 
+// установить новый источник данных Договоры
+export const setDsContracts = (state, newDs) => {
+  state.dsContracts = newDs;
+};
+
 // установить новый источник данных План-график исследований
 export const setDsMasterSchedules = (state, payload) => {
   // обход ограничения vue по отслеживанию изменений свойств объекта
@@ -98,6 +103,9 @@ export const cleanOutDs = (state) => {
   state.dsShortCustomers = [];   // Заказчики для QSelect
   state.dsCountries = [];        // Страны
   state.dsManufacturers = [];    // Производители
+
+  // Реестры
+  state.dsContracts = [];    // Договоры
 };
 
 // создание конфигурации авторизации

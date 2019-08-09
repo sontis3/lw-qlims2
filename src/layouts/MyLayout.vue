@@ -296,7 +296,7 @@ export default {
     // выбрана акция в дереве
     actionNodeSelected(target) {
       const routeArr = target.split('.');
-      if (routeArr[0] === 'MasterSchedules') {
+      if (['Contracts', 'MasterSchedules'].includes(routeArr[0])) {   // если листья дерева - годы
         this.$router.push({ name: routeArr[0], params: { year: routeArr[1] } });
       } else {
         this.$router.push({ name: routeArr[0] });

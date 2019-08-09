@@ -27,6 +27,7 @@ export default {
 
   testObjectsPartUrl: 'test-objects',
   deliveryMethodsPartUrl: 'delivery-methods',
+  contractsPartUrl: 'contracts',
   studiesPartUrl: 'studies',
   contentPartUrl: 'content',
   infoPartUrl: 'info',
@@ -50,6 +51,8 @@ export default {
   // dsTestObjects: [],      // Тестируемые объекты
   // dsShortTestObjects: [], // Тестируемые объекты для QSelect
   // dsDeliveryMethods: [],  // Методы доставки
+  // Реестры
+  dsContracts: [],        // Договоры
   dsMasterSchedules: [],  // План-график исследований (именем свойства является номер года)
 
   // годы
