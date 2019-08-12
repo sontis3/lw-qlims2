@@ -51,9 +51,9 @@
 <script>
 import {
   mapState,
-  // mapGetters,
-  // mapMutations,
-  // mapActions,
+  mapGetters,
+  mapMutations,
+  mapActions,
 } from 'vuex';
 
 export default {
@@ -156,30 +156,39 @@ export default {
       // isLoading: state => state.ds.isLoading,
       // abilityDS: state => state.ds.ability,
     }),
-    // ...mapGetters({
-    //   getErrorDescription: 'appMode/getErrorDescription',
-    //   getEnabledCountries: 'ds/getEnabledCountries',
-    // }),
+    ...mapGetters({
+      getErrorDescription: 'appMode/getErrorDescription',
+      // getEnabledCountries: 'ds/getEnabledCountries',
+    }),
+  },
+
+  methods: {
+    ...mapMutations({
+      addErrorNotification: 'appMode/addErrorNotification',
+      setLoading: 'ds/setLoading',
+    }),
+    ...mapActions({
+      getDocuments: 'ds/getContracts',
+    }),
   },
 
   mounted() {
-    // if (this.dsCountries.length === 0) {
-    //   this.setLoading(true);
-    //   this.getCountries().then()
-    //     .catch((err) => {
-    //       const errDescription = this.getErrorDescription('get', err);
-    //       this.addErrorNotification({ message: err.message, description: errDescription });
-    //       this.$q.notify({
-    //         color: 'negative',
-    //         position: 'top',
-    //         message: errDescription,
-    //         icon: 'report_problem',
-    //       });
-    //     })
-    //     .finally(() => {
-    //       this.setLoading(false);
-    //     });
-    // }
+    this.setLoading(true);
+    const res = this.getDocuments(this.$route.params.year);
+    res.then()
+      .catch((err) => {
+        const errDescription = this.getErrorDescription('get', err);
+        this.addErrorNotification({ message: err.message, description: errDescription });
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: errDescription,
+          icon: 'report_problem',
+        });
+      })
+      .finally(() => {
+        this.setLoading(false);
+      });
   },
 };
 

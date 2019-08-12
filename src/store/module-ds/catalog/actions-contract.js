@@ -7,7 +7,7 @@ const setDsMutation = 'setDsContracts';
 const sysObject = 'contract';          // название сист. объекта
 
 // получить полный источник данных
-export const getContracts = async ({ commit, getters }) => {
+export const getContracts = async ({ commit, getters }, obj) => {
   // проверка разрешений
   if (!getters.isGranted('read', sysObject)) {
     commit(setDsMutation, []);
@@ -15,7 +15,7 @@ export const getContracts = async ({ commit, getters }) => {
   }
 
   const url = getUrl(getters);
-  const response = await axios.get(url)
+  const response = await axios.get(url, { params: { year: obj } })
     .then((resp) => { commit(setDsMutation, resp.data); return resp; })
     .catch((err) => {
       // очистка ds и проброс ошибки

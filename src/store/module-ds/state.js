@@ -9,7 +9,7 @@ export default {
   apiUrl: 'http://localhost:3000/api',
   dirPartUrl: 'dir',
   adminPartUrl: 'admin',
-  catalogsPartUrl: 'catalogs',
+  catalogPartUrl: 'catalog',
 
   // администрирование
   systemObjectsPartUrl: 'system-objects',

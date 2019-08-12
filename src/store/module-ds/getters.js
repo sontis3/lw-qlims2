@@ -16,8 +16,8 @@ export const manufacturersUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${
 export const testObjectsUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.testObjectsPartUrl}`;
 export const deliveryMethodsUrl = state => `${state.apiUrl}/${state.dirPartUrl}/${state.deliveryMethodsPartUrl}`;
 
-export const contractsUrl = state => `${state.apiUrl}/${state.catalogsPartUrl}/${state.contractsPartUrl}`;
-export const studiesUrl = state => `${state.apiUrl}/${state.catalogsPartUrl}/${state.studiesPartUrl}`;
+export const contractsUrl = state => `${state.apiUrl}/${state.catalogPartUrl}/${state.contractsPartUrl}`;
+export const studiesUrl = state => `${state.apiUrl}/${state.catalogPartUrl}/${state.studiesPartUrl}`;
 export const studyContentUrl = (state, getters) => studyId => `${getters.studiesUrl}/${studyId}/${state.contentPartUrl}`;
 export const studyContentInfoUrl = (state, getters) => studyId => `${getters.studyContentUrl(studyId)}/${state.infoPartUrl}`;
 
