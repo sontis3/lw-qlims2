@@ -230,7 +230,6 @@ import {
 } from 'vuex';
 import { required } from 'vuelidate/lib/validators';
 
-// import { PageContainer } from '../mixins/page-container';
 import { DeletePopover } from '../mixins/delete-popover';
 
 export default {

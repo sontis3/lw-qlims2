@@ -169,11 +169,12 @@ import {
   mapActions,
 } from 'vuex';
 import { PageContainer } from '../mixins/page-container';
+import { DefaultMounted } from '../mixins/default-mounted';
 import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
   // name: 'ComponentName',
-  mixins: [PageContainer, DeletePopover],
+  mixins: [PageContainer, DefaultMounted, DeletePopover],
   data() {
     return {
       columns: [

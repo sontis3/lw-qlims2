@@ -132,12 +132,11 @@ import {
   mapMutations,
   mapActions,
 } from 'vuex';
-import { PageContainer } from '../mixins/page-container';
 import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
   // name: 'ComponentName',
-  mixins: [PageContainer, DeletePopover],
+  mixins: [DeletePopover],
   data() {
     return {
       columns: [
@@ -184,7 +183,6 @@ export default {
     }),
 
     ...mapActions({
-      getDocuments: 'ds/getSystemObjects',
       dropCollection: 'ds/dropCollection',
       restoreCollection: 'ds/restoreCollection',
     }),
