@@ -10,6 +10,7 @@ export const PageContainer = {
   },
 
   methods: {
+    // форматирование даты для показа в таблице
     formatDateTime(dateField) {
       return date.formatDate(dateField, 'DD.MM.YYYY HH:mm');
     },

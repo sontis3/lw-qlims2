@@ -113,6 +113,7 @@ export default {
         align: 'center',
         field: 'createdAt',
         sortable: true,
+        classes: 'as-date-time',
       },
       {
         name: 'updatedAt',
@@ -120,6 +121,7 @@ export default {
         align: 'center',
         field: 'updatedAt',
         sortable: true,
+        classes: 'as-date-time',
       },
       {
         name: 'rowActions',
@@ -169,6 +171,7 @@ export default {
     }),
     ...mapActions({
       getDocuments: 'ds/getContracts',
+      addDocument: 'ds/addContract',
     }),
   },
 
