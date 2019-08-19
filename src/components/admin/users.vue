@@ -70,6 +70,10 @@
               />
             </template>
 
+            <template v-else-if="col.classes === 'as-date-time'" :props="props">
+              {{ formatDateTime(col.value) }}
+            </template>
+
             <template v-else-if="col.classes === 'popup-edit'" :props="props">
               {{ col.value }}
               <q-popup-edit
@@ -245,6 +249,7 @@ export default {
           align: 'center',
           field: 'createdAt',
           sortable: true,
+          classes: 'as-date-time',
         },
         {
           name: 'updatedAt',
@@ -252,6 +257,7 @@ export default {
           align: 'center',
           field: 'updatedAt',
           sortable: true,
+          classes: 'as-date-time',
         },
         {
           name: 'rowActions',

@@ -1,4 +1,4 @@
-import { extend } from 'quasar';
+import { extend, date } from 'quasar';
 
 export const PageContainer = {
   data() {
@@ -10,6 +10,10 @@ export const PageContainer = {
   },
 
   methods: {
+    formatDateTime(dateField) {
+      return date.formatDate(dateField, 'DD.MM.YYYY HH:mm');
+    },
+
     // создать документ
     onAddDocument() {
       this.showDialog = true;
