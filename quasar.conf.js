@@ -67,6 +67,8 @@ module.exports = function (ctx) {
         'QTabPanel',
         'QScrollArea',
         'QOptionGroup',
+        'QDate',
+        'QPopupProxy',
       ],
 
       directives: [
@@ -80,7 +82,7 @@ module.exports = function (ctx) {
       ],
 
       // iconSet: 'ionicons-v4'
-      // lang: 'de' // Quasar language
+      lang: 'ru', // Quasar language
     },
 
     supportIE: false,

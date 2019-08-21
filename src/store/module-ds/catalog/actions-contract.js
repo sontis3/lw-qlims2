@@ -34,12 +34,26 @@ export const addContract = async ({ commit, getters, dispatch }, obj) => {
   }
 
   const url = getUrl(getters);
-  const countryObjId = obj.country ? obj.country.id : null;
+  const regValueParsed = obj.reg_date.split('.');
+  if (!regValueParsed.length === 3) {
+    return null;
+  }
+
+  const regDateIso = `${regValueParsed[2]}-${regValueParsed[1]}-${regValueParsed[0]}`;
+
+  const deadValueParsed = obj.deadline_date.split('.');
+  if (!deadValueParsed.length === 3) {
+    return null;
+  }
+  const deadlineDateIso = `${deadValueParsed[2]}-${deadValueParsed[1]}-${deadValueParsed[0]}`;
+  const customerObjId = obj.customer ? obj.customer.id : null;
 
   const postData = {
-    name_ru: obj.name_ru,
-    name_en: obj.name_en,
-    countryId: countryObjId,
+    reg_code: obj.reg_code,
+    reg_date: regDateIso,
+    theme: obj.theme,
+    deadline_date: deadlineDateIso,
+    customerId: customerObjId,
   };
 
   const response = await axios.post(url, postData);
