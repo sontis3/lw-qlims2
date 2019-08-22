@@ -39,7 +39,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view/>
+      <router-view :key="$route.fullPath"/>
     </q-page-container>
 
     <!-- настройка футера -->
