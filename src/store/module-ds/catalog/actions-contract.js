@@ -50,8 +50,8 @@ export const addContract = async ({ commit, getters, dispatch }, obj) => {
 
   const postData = {
     reg_code: obj.reg_code,
-    reg_date: regDateIso,
     theme: obj.theme,
+    reg_date: regDateIso,
     deadline_date: deadlineDateIso,
     customerId: customerObjId,
   };

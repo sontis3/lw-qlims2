@@ -10,7 +10,6 @@
       :pagination.sync="pagination"
       dense
       separator="cell"
-      selection="single"
     >
       <!-- слот панели кнопок вверху справа -->
       <template v-slot:top-right="props">
@@ -46,6 +45,87 @@
           class="q-ml-md"
         />
       </template>
+
+      <!-- слот тела таблицы -->
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <template v-if="col.classes === 'as-checkbox'" :props="props">
+              <q-checkbox
+                :value="props.row[col.field]"
+                @input="(val) => onUpdateDocument(val, props.row, col.field, 'name')"
+              />
+            </template>
+
+            <template v-else-if="col.classes === 'as-select'" :props="props">
+              <q-select
+                :value="props.row[col.rowFieldName]"
+                :options="getEnabledCountries"
+                @input="(val) => onUpdateDocument(val, props.row, col.rowFieldName, 'name')"
+                option-value="id"
+                option-label="name_ru"
+                style="width: 120px"
+                filled
+                dense
+                options-dense
+              />
+            </template>
+
+            <template
+              v-else-if="col.classes === 'as-date-time'"
+              :props="props"
+            >{{ formatDateTime(col.value) }}</template>
+
+            <template v-else-if="col.classes === 'popup-edit'" :props="props">
+              {{ col.value }}
+              <q-popup-edit
+                v-model="popupEditData"
+                buttons
+                @show="() => onShowPopup(props.row, col.field)"
+                @save="(val, initval) => { onUpdateDocument(val, props.row, col.field, 'name'); popupEditData = ''; }"
+              >
+                <q-input v-model="popupEditData" dense counter autofocus />
+              </q-popup-edit>
+            </template>
+
+            <template v-else-if="col.name === 'rowActions'" :props="props">
+              <q-btn round size="xs" icon="delete">
+                <q-tooltip>Удаление документа</q-tooltip>
+                <q-menu
+                  anchor="bottom left"
+                  self="top left"
+                  :content-style="popoverStyle"
+                  @show="showPopover"
+                  auto-close
+                >
+                  <span id="popover-title">Документ выбран для удаления</span>
+                  <div id="del-buttons">
+                    <q-btn
+                      outliner
+                      rounded
+                      dense
+                      size="form-label-inverted"
+                      color="red-14"
+                      text-color="white"
+                      label="Отменить"
+                    />
+                    <q-btn
+                      outliner
+                      rounded
+                      dense
+                      color="red-4"
+                      text-color="white"
+                      label="Удалить"
+                      @click="onDeleteDocument(props.row, 'name', deleteDocument)"
+                    />
+                  </div>
+                </q-menu>
+              </q-btn>
+            </template>
+            <template v-else>{{ col.value }}</template>
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
 
     <!-- Диалог добавления документа -->
@@ -66,17 +146,6 @@
             </q-input>
           </div>
           <div class="row q-mb-md">
-            <q-input filled v-model="addFormFields.reg_date" label="Дата регистрации" mask="##.##.####" :rules="['validDate']">
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy ref="qDateProxy1" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="addFormFields.reg_date" mask="DD.MM.YYYY" @input="() => $refs.qDateProxy1.hide()" />
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
-          <div class="row q-mb-md">
             <q-input
               v-model="addFormFields.theme"
               label="Тема"
@@ -86,11 +155,42 @@
             </q-input>
           </div>
           <div class="row q-mb-md">
-            <q-input filled v-model="addFormFields.deadline_date" label="Срок действия договора" mask="##.##.####" :rules="['validDate']">
+            <q-input
+              filled
+              v-model="addFormFields.reg_date"
+              label="Дата регистрации"
+              mask="##.##.####"
+              :rules="['validDate']"
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy ref="qDateProxy1" transition-show="scale" transition-hide="scale">
+                    <q-date
+                      v-model="addFormFields.reg_date"
+                      mask="DD.MM.YYYY"
+                      @input="() => $refs.qDateProxy1.hide()"
+                    />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <div class="row q-mb-md">
+            <q-input
+              filled
+              v-model="addFormFields.deadline_date"
+              label="Срок действия договора"
+              mask="##.##.####"
+              :rules="['validDate']"
+            >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="qDateProxy2" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="addFormFields.deadline_date" mask="DD.MM.YYYY" @input="() => $refs.qDateProxy2.hide()" />
+                    <q-date
+                      v-model="addFormFields.deadline_date"
+                      mask="DD.MM.YYYY"
+                      @input="() => $refs.qDateProxy2.hide()"
+                    />
                   </q-popup-proxy>
                 </q-icon>
               </template>
@@ -139,9 +239,10 @@ import {
   // sameAs
 } from 'vuelidate/lib/validators';
 import { PageContainer } from '../mixins/page-container';
+import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
-  mixins: [PageContainer],
+  mixins: [PageContainer, DeletePopover],
   data: () => ({
     columns: [
       {
@@ -162,13 +263,6 @@ export default {
         classes: 'popup-edit',
       },
       {
-        name: 'reg_date',
-        label: 'Дата регистрации',
-        align: 'center',
-        field: 'reg_date',
-        sortable: true,
-      },
-      {
         name: 'theme',
         required: true,
         label: 'Тема',
@@ -178,11 +272,20 @@ export default {
         classes: 'popup-edit',
       },
       {
+        name: 'reg_date',
+        label: 'Дата регистрации',
+        align: 'center',
+        field: 'reg_date',
+        sortable: true,
+        classes: 'as-date-time',
+      },
+      {
         name: 'deadline_date',
         label: 'Срок действия договора',
         align: 'center',
         field: 'deadline_date',
         sortable: true,
+        classes: 'as-date-time',
       },
       {
         name: 'customer',
@@ -217,14 +320,14 @@ export default {
         style: 'width: 80px',
       },
     ],
-    visibleColumns: ['expandButton', 'reg_code', 'reg_date', 'theme', 'deadline_date', 'customer', 'createdAt', 'updatedAt', 'rowActions'],
+    visibleColumns: ['expandButton', 'reg_code', 'reg_date', 'deadline_date', 'theme', 'customer', 'createdAt', 'updatedAt', 'rowActions'],
     pagination: { rowsPerPage: 8 },
     filter: '',         // фильтр таблицы
     addFormFields: {
       reg_code: null,
       reg_date: null,
-      theme: null,
       deadline_date: null,
+      theme: null,
       customer: null,
     },
     showDialog: false,
@@ -242,8 +345,8 @@ export default {
       addFormFields: {
         reg_code: { required, minLength: minLength(6) },
         // reg_date: { minLength: minLength(2) },
-        theme: { required, minLength: minLength(6) },
         // deadline_date: { minLength: minLength(2) },
+        theme: { required, minLength: minLength(6) },
         // customerId: { minLength: minLength(2) },
       },
     };
