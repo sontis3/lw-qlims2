@@ -60,3 +60,17 @@ export const addContract = async ({ commit, getters, dispatch }, obj) => {
   await dispatch(getAction);
   return response;
 };
+
+// удалить документ
+export const deleteContract = async ({ commit, getters, dispatch }, id) => {
+  // проверка разрешений
+  if (!getters.isGranted('delete', sysObject)) {
+    commit(setDsMutation, []);
+    return null;
+  }
+
+  const url = `${getUrl(getters)}/${id}`;
+  const response = await axios.delete(url);
+  await dispatch(getAction);
+  return response;
+};

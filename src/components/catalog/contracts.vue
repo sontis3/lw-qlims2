@@ -373,6 +373,7 @@ export default {
     ...mapActions({
       getDocuments: 'ds/getContracts',
       addDocument: 'ds/addContract',
+      deleteDocument: 'ds/deleteContract',
       getCustomers: 'ds/getCustomers',
     }),
 
