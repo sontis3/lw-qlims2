@@ -239,10 +239,11 @@ import {
   // sameAs
 } from 'vuelidate/lib/validators';
 import { PageContainer } from '../mixins/page-container';
+import { DefaultMounted } from '../mixins/default-mounted';
 import { DeletePopover } from '../mixins/delete-popover';
 
 export default {
-  mixins: [PageContainer, DeletePopover],
+  mixins: [PageContainer, DefaultMounted, DeletePopover],
   data: () => ({
     columns: [
       {
@@ -371,7 +372,7 @@ export default {
       setLoading: 'ds/setLoading',
     }),
     ...mapActions({
-      getDocuments: 'ds/getContracts',
+      getContracts: 'ds/getContracts',
       addDocument: 'ds/addContract',
       deleteDocument: 'ds/deleteContract',
       getCustomers: 'ds/getCustomers',
@@ -390,26 +391,15 @@ export default {
       });
       return date.isValid(dateParsed.toString());
     },
+
+    // хук для передачи параметра года
+    getDocuments() {
+      return this.getContracts(this.$route.params.year);
+    },
   },
 
   mounted() {
     this.setLoading(true);
-    const res = this.getDocuments(this.$route.params.year);
-    res.then()
-      .catch((err) => {
-        const errDescription = this.getErrorDescription('get', err);
-        this.addErrorNotification({ message: err.message, description: errDescription });
-        this.$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: errDescription,
-          icon: 'report_problem',
-        });
-      })
-      .finally(() => {
-        this.setLoading(false);
-      });
-
     if (this.dsCustomers.length === 0) {
       this.setLoading(true);
       this.getCustomers().then()
